@@ -45,10 +45,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -126,10 +134,63 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ControllerFactory.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LibraryController.cs" />
+    <Compile Include="Controllers\ReaderController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Address.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BGRepository.cs" />
+    <Compile Include="Models\BookGiving.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BookReturning.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BRRepository.cs" />
+    <Compile Include="Models\DataManager.cs" />
+    <Compile Include="Models\Librarian.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LibrarianRepository.cs" />
+    <Compile Include="Models\Library.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Library.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Library.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Penalty.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PenaltyRepository.cs" />
+    <Compile Include="Models\Person.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Publication.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PublicationRepository.cs" />
+    <Compile Include="Models\Publisher.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PublisherRepository.cs" />
+    <Compile Include="Models\Reader.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReaderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,8 +202,26 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\Library.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Library.Context.cs</LastGenOutput>
+      <DependentUpon>Library.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Library.edmx.sql" />
+    <Content Include="Models\Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Library.cs</LastGenOutput>
+      <DependentUpon>Library.edmx</DependentUpon>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\Library.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Library.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Library.edmx.diagram">
+      <DependentUpon>Library.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -154,7 +233,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -168,10 +249,14 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Library\ReadersCollection.cshtml" />
+    <Content Include="Views\Library\ChangeReader.cshtml" />
+    <Content Include="Views\Library\BooksCollection.cshtml" />
+    <Content Include="Views\Library\ReadersSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Views\Reader\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -185,6 +270,9 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

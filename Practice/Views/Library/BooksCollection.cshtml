@@ -1,0 +1,82 @@
+﻿@using Practice.Models
+@model IEnumerable<Practice.Models.Publication>
+
+@{
+    ViewBag.Title = "Список книг";
+}
+
+<h2>BooksCollection</h2>
+
+<p>
+    @Html.ActionLink("Добавить новую книгу", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Название")
+        </th>
+        <th>
+            @Html.DisplayName("ББК")
+        </th>
+        <th>
+            @Html.DisplayName("Автор")
+        </th>
+        <th>
+            @Html.DisplayName("Наличие")
+        </th>
+        <th>
+            @Html.DisplayName("ISBN/ISSN")
+        </th>
+        <th>
+            @Html.DisplayName("Страницы ")
+        </th>
+        <th>
+            @Html.DisplayName("№ выпуска/тома")
+        </th>
+        <th>
+            @Html.DisplayName("Издательство")
+        </th>
+        <th>
+            @Html.DisplayName("Год выпуска")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (Publication item in (IEnumerable<Publication>)ViewData["Books"]) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BBK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Author)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Available)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISBN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Page_Count)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Release_Number)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Publisher.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

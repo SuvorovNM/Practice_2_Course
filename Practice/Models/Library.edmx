@@ -1,0 +1,653 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Library.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="LibraryStoreContainer">
+    <EntitySet Name="AddressSet" EntityType="Library.Store.AddressSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PersonSet" EntityType="Library.Store.PersonSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PublicationSet" EntityType="Library.Store.PublicationSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PublisherSet" EntityType="Library.Store.PublisherSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PenaltySet" EntityType="Library.Store.PenaltySet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BookGivingSet" EntityType="Library.Store.BookGivingSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BookReturningSet" EntityType="Library.Store.BookReturningSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PersonSet_Reader" EntityType="Library.Store.PersonSet_Reader" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PersonSet_Librarian" EntityType="Library.Store.PersonSet_Librarian" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="AddressPerson" Association="Library.Store.AddressPerson">
+      <End Role="Address" EntitySet="AddressSet" />
+      <End Role="Person" EntitySet="PersonSet" />
+    </AssociationSet>
+    <AssociationSet Name="PublisherPublication" Association="Library.Store.PublisherPublication">
+      <End Role="Publisher" EntitySet="PublisherSet" />
+      <End Role="Publication" EntitySet="PublicationSet" />
+    </AssociationSet>
+    <AssociationSet Name="PenaltyBookReturning" Association="Library.Store.PenaltyBookReturning">
+      <End Role="Penalty" EntitySet="PenaltySet" />
+      <End Role="BookReturning" EntitySet="BookReturningSet" />
+    </AssociationSet>
+    <AssociationSet Name="BookReturningBookGiving" Association="Library.Store.BookReturningBookGiving">
+      <End Role="BookReturning" EntitySet="BookReturningSet" />
+      <End Role="BookGiving" EntitySet="BookGivingSet" />
+    </AssociationSet>
+    <AssociationSet Name="ReaderBookGiving" Association="Library.Store.ReaderBookGiving">
+      <End Role="Reader" EntitySet="PersonSet_Reader" />
+      <End Role="BookGiving" EntitySet="BookGivingSet" />
+    </AssociationSet>
+    <AssociationSet Name="LibrarianBookGiving" Association="Library.Store.LibrarianBookGiving">
+      <End Role="Librarian" EntitySet="PersonSet_Librarian" />
+      <End Role="BookGiving" EntitySet="BookGivingSet" />
+    </AssociationSet>
+    <AssociationSet Name="PublicationBookGiving" Association="Library.Store.PublicationBookGiving">
+      <End Role="Publication" EntitySet="PublicationSet" />
+      <End Role="BookGiving" EntitySet="BookGivingSet" />
+    </AssociationSet>
+    <AssociationSet Name="LibrarianBookReturning" Association="Library.Store.LibrarianBookReturning">
+      <End Role="Librarian" EntitySet="PersonSet_Librarian" />
+      <End Role="BookReturning" EntitySet="BookReturningSet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reader_inherits_Person" Association="Library.Store.FK_Reader_inherits_Person">
+      <End Role="Person" EntitySet="PersonSet" />
+      <End Role="Reader" EntitySet="PersonSet_Reader" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Librarian_inherits_Person" Association="Library.Store.FK_Librarian_inherits_Person">
+      <End Role="Person" EntitySet="PersonSet" />
+      <End Role="Librarian" EntitySet="PersonSet_Librarian" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="AddressSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Region" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="City" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Street" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="House" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Flat" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PersonSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FIO" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Birthday" Type="datetime" Nullable="false" />
+    <Property Name="Phone_Number" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="PublicationSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BBK" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UDK" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Author" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Available" Type="bit" Nullable="false" />
+    <Property Name="ISBN" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Page_Count" Type="int" Nullable="false" />
+    <Property Name="Release_Number" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Year" Type="int" Nullable="false" />
+    <Property Name="Publisher_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PublisherSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="City" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PenaltySet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Info" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Sum" Type="decimal" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BookGivingSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Give_Date" Type="datetime" Nullable="false" />
+    <Property Name="Expected_Return_Date" Type="datetime" Nullable="false" />
+    <Property Name="Reader_Id" Type="int" Nullable="false" />
+    <Property Name="Librarian_Id" Type="int" Nullable="false" />
+    <Property Name="Publication_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BookReturningSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Real_Return_Date" Type="datetime" Nullable="false" />
+    <Property Name="Librarian_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PersonSet_Reader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Library_Card" Type="int" Nullable="false" />
+    <Property Name="Registration_Date" Type="datetime" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PersonSet_Librarian">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Staff_Number" Type="int" Nullable="false" />
+    <Property Name="Hiring_Date" Type="datetime" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Privilege" Type="tinyint" Nullable="false" />
+    <Property Name="Deleted" Type="bit" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="AddressPerson">
+    <End Role="Address" Type="Library.Store.AddressSet" Multiplicity="0..1" />
+    <End Role="Person" Type="Library.Store.PersonSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PublisherPublication">
+    <End Role="Publisher" Type="Library.Store.PublisherSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Publication" Type="Library.Store.PublicationSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Publisher">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Publication">
+        <PropertyRef Name="Publisher_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PenaltyBookReturning">
+    <End Role="Penalty" Type="Library.Store.PenaltySet" Multiplicity="0..1" />
+    <End Role="BookReturning" Type="Library.Store.BookReturningSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <ReferentialConstraint>
+      <Principal Role="BookReturning">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Penalty">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BookReturningBookGiving">
+    <End Role="BookReturning" Type="Library.Store.BookReturningSet" Multiplicity="0..1" />
+    <End Role="BookGiving" Type="Library.Store.BookGivingSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <ReferentialConstraint>
+      <Principal Role="BookGiving">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookReturning">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ReaderBookGiving">
+    <End Role="Reader" Type="Library.Store.PersonSet_Reader" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BookGiving" Type="Library.Store.BookGivingSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reader">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookGiving">
+        <PropertyRef Name="Reader_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LibrarianBookGiving">
+    <End Role="Librarian" Type="Library.Store.PersonSet_Librarian" Multiplicity="1" />
+    <End Role="BookGiving" Type="Library.Store.BookGivingSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Librarian">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookGiving">
+        <PropertyRef Name="Librarian_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PublicationBookGiving">
+    <End Role="Publication" Type="Library.Store.PublicationSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BookGiving" Type="Library.Store.BookGivingSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Publication">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookGiving">
+        <PropertyRef Name="Publication_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LibrarianBookReturning">
+    <End Role="Librarian" Type="Library.Store.PersonSet_Librarian" Multiplicity="1" />
+    <End Role="BookReturning" Type="Library.Store.BookReturningSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Librarian">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookReturning">
+        <PropertyRef Name="Librarian_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reader_inherits_Person">
+    <End Role="Person" Type="Library.Store.PersonSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Reader" Type="Library.Store.PersonSet_Reader" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Reader">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Librarian_inherits_Person">
+    <End Role="Person" Type="Library.Store.PersonSet" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Librarian" Type="Library.Store.PersonSet_Librarian" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Librarian">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Library" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="LibraryContainer1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AddressSet" EntityType="Library.Address" />
+          <EntitySet Name="PersonSet" EntityType="Library.Person" />
+          <AssociationSet Name="AddressPerson" Association="Library.AddressPerson">
+            <End Role="Address" EntitySet="AddressSet" />
+            <End Role="Person" EntitySet="PersonSet" />
+          </AssociationSet>
+          <EntitySet Name="PublicationSet" EntityType="Library.Publication" />
+          <EntitySet Name="PublisherSet" EntityType="Library.Publisher" />
+          <AssociationSet Name="PublisherPublication" Association="Library.PublisherPublication">
+            <End Role="Publisher" EntitySet="PublisherSet" />
+            <End Role="Publication" EntitySet="PublicationSet" />
+          </AssociationSet>
+          <EntitySet Name="PenaltySet" EntityType="Library.Penalty" />
+          <EntitySet Name="BookGivingSet" EntityType="Library.BookGiving" />
+          <EntitySet Name="BookReturningSet" EntityType="Library.BookReturning" />
+          <AssociationSet Name="PenaltyBookReturning" Association="Library.PenaltyBookReturning">
+            <End Role="Penalty" EntitySet="PenaltySet" />
+            <End Role="BookReturning" EntitySet="BookReturningSet" />
+          </AssociationSet>
+          <AssociationSet Name="BookReturningBookGiving" Association="Library.BookReturningBookGiving">
+            <End Role="BookReturning" EntitySet="BookReturningSet" />
+            <End Role="BookGiving" EntitySet="BookGivingSet" />
+          </AssociationSet>
+          <AssociationSet Name="ReaderBookGiving" Association="Library.ReaderBookGiving">
+            <End Role="Reader" EntitySet="PersonSet" />
+            <End Role="BookGiving" EntitySet="BookGivingSet" />
+          </AssociationSet>
+          <AssociationSet Name="LibrarianBookGiving" Association="Library.LibrarianBookGiving">
+            <End Role="Librarian" EntitySet="PersonSet" />
+            <End Role="BookGiving" EntitySet="BookGivingSet" />
+          </AssociationSet>
+          <AssociationSet Name="PublicationBookGiving" Association="Library.PublicationBookGiving">
+            <End Role="Publication" EntitySet="PublicationSet" />
+            <End Role="BookGiving" EntitySet="BookGivingSet" />
+          </AssociationSet>
+          <AssociationSet Name="LibrarianBookReturning" Association="Library.LibrarianBookReturning">
+            <End Role="Librarian" EntitySet="PersonSet" />
+            <End Role="BookReturning" EntitySet="BookReturningSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Region" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Street" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="House" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Flat" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Library.AddressPerson" FromRole="Address" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FIO" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Phone_Number" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="true" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Address" Relationship="Library.AddressPerson" FromRole="Person" ToRole="Address" />
+        </EntityType>
+        <Association Name="AddressPerson">
+          <End Type="Library.Address" Role="Address" Multiplicity="1" />
+          <End Type="Library.Person" Role="Person" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Reader" BaseType="Library.Person">
+          <Property Name="Library_Card" Type="Int32" Nullable="false" />
+          <Property Name="Registration_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="BookGiving" Relationship="Library.ReaderBookGiving" FromRole="Reader" ToRole="BookGiving" />
+        </EntityType>
+        <EntityType Name="Librarian" BaseType="Library.Person">
+          <Property Name="Staff_Number" Type="Int32" Nullable="false" />
+          <Property Name="Hiring_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Privilege" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="BookGiving" Relationship="Library.LibrarianBookGiving" FromRole="Librarian" ToRole="BookGiving" />
+          <NavigationProperty Name="BookReturning" Relationship="Library.LibrarianBookReturning" FromRole="Librarian" ToRole="BookReturning" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Publication">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BBK" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UDK" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Author" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Available" Type="Boolean" Nullable="false" />
+          <Property Name="ISBN" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Page_Count" Type="Int32" Nullable="false" />
+          <Property Name="Release_Number" Type="String" Nullable="true" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Publisher" Relationship="Library.PublisherPublication" FromRole="Publication" ToRole="Publisher" />
+          <NavigationProperty Name="BookGiving" Relationship="Library.PublicationBookGiving" FromRole="Publication" ToRole="BookGiving" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Publication" Relationship="Library.PublisherPublication" FromRole="Publisher" ToRole="Publication" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="City" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="PublisherPublication">
+          <End Type="Library.Publisher" Role="Publisher" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Library.Publication" Role="Publication" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Penalty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Info" Type="String" Nullable="false" />
+          <Property Name="Sum" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="BookReturning" Relationship="Library.PenaltyBookReturning" FromRole="Penalty" ToRole="BookReturning" />
+        </EntityType>
+        <EntityType Name="BookGiving">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Give_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Expected_Return_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="BookReturning" Relationship="Library.BookReturningBookGiving" FromRole="BookGiving" ToRole="BookReturning" />
+          <NavigationProperty Name="Reader" Relationship="Library.ReaderBookGiving" FromRole="BookGiving" ToRole="Reader" />
+          <NavigationProperty Name="Librarian" Relationship="Library.LibrarianBookGiving" FromRole="BookGiving" ToRole="Librarian" />
+          <NavigationProperty Name="Publication" Relationship="Library.PublicationBookGiving" FromRole="BookGiving" ToRole="Publication" />
+        </EntityType>
+        <EntityType Name="BookReturning">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Real_Return_Date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Penalty" Relationship="Library.PenaltyBookReturning" FromRole="BookReturning" ToRole="Penalty" />
+          <NavigationProperty Name="BookGiving" Relationship="Library.BookReturningBookGiving" FromRole="BookReturning" ToRole="BookGiving" />
+          <NavigationProperty Name="Librarian" Relationship="Library.LibrarianBookReturning" FromRole="BookReturning" ToRole="Librarian" />
+        </EntityType>
+        <Association Name="PenaltyBookReturning">
+          <End Type="Library.Penalty" Role="Penalty" Multiplicity="1" />
+          <End Type="Library.BookReturning" Role="BookReturning" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BookReturning">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Penalty">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BookReturningBookGiving">
+          <End Type="Library.BookReturning" Role="BookReturning" Multiplicity="1" />
+          <End Type="Library.BookGiving" Role="BookGiving" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="BookGiving">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BookReturning">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ReaderBookGiving">
+          <End Type="Library.Reader" Role="Reader" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Library.BookGiving" Role="BookGiving" Multiplicity="*" />
+        </Association>
+        <Association Name="LibrarianBookGiving">
+          <End Type="Library.Librarian" Role="Librarian" Multiplicity="1" >
+          </End>
+          <End Type="Library.BookGiving" Role="BookGiving" Multiplicity="*" />
+        </Association>
+        <Association Name="PublicationBookGiving">
+          <End Type="Library.Publication" Role="Publication" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Library.BookGiving" Role="BookGiving" Multiplicity="*" />
+        </Association>
+        <Association Name="LibrarianBookReturning">
+          <End Type="Library.Librarian" Role="Librarian" Multiplicity="1" />
+          <End Type="Library.BookReturning" Role="BookReturning" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="LibraryStoreContainer" CdmEntityContainer="LibraryContainer1">
+    <EntitySetMapping Name="AddressSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Address)">
+        <MappingFragment StoreEntitySet="AddressSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Region" ColumnName="Region" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="House" ColumnName="House" />
+          <ScalarProperty Name="Flat" ColumnName="Flat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PersonSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Person)">
+        <MappingFragment StoreEntitySet="PersonSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FIO" ColumnName="FIO" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+          <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Reader)">
+        <MappingFragment StoreEntitySet="PersonSet_Reader">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Library_Card" ColumnName="Library_Card" />
+          <ScalarProperty Name="Registration_Date" ColumnName="Registration_Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Librarian)">
+        <MappingFragment StoreEntitySet="PersonSet_Librarian">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Staff_Number" ColumnName="Staff_Number" />
+          <ScalarProperty Name="Hiring_Date" ColumnName="Hiring_Date" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Privilege" ColumnName="Privilege" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PublicationSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Publication)">
+        <MappingFragment StoreEntitySet="PublicationSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BBK" ColumnName="BBK" />
+          <ScalarProperty Name="UDK" ColumnName="UDK" />
+          <ScalarProperty Name="Author" ColumnName="Author" />
+          <ScalarProperty Name="Available" ColumnName="Available" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="Page_Count" ColumnName="Page_Count" />
+          <ScalarProperty Name="Release_Number" ColumnName="Release_Number" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PublisherSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Publisher)">
+        <MappingFragment StoreEntitySet="PublisherSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="City" ColumnName="City" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PenaltySet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.Penalty)">
+        <MappingFragment StoreEntitySet="PenaltySet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Info" ColumnName="Info" />
+          <ScalarProperty Name="Sum" ColumnName="Sum" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BookGivingSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.BookGiving)">
+        <MappingFragment StoreEntitySet="BookGivingSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Give_Date" ColumnName="Give_Date" />
+          <ScalarProperty Name="Expected_Return_Date" ColumnName="Expected_Return_Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BookReturningSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Library.BookReturning)">
+        <MappingFragment StoreEntitySet="BookReturningSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Real_Return_Date" ColumnName="Real_Return_Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="PublisherPublication" TypeName="Library.PublisherPublication" StoreEntitySet="PublicationSet">
+      <EndProperty Name="Publisher">
+        <ScalarProperty Name="Id" ColumnName="Publisher_Id" />
+      </EndProperty>
+      <EndProperty Name="Publication">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ReaderBookGiving" TypeName="Library.ReaderBookGiving" StoreEntitySet="BookGivingSet">
+      <EndProperty Name="Reader">
+        <ScalarProperty Name="Id" ColumnName="Reader_Id" />
+      </EndProperty>
+      <EndProperty Name="BookGiving">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LibrarianBookGiving" TypeName="Library.LibrarianBookGiving" StoreEntitySet="BookGivingSet">
+      <EndProperty Name="Librarian">
+        <ScalarProperty Name="Id" ColumnName="Librarian_Id" />
+      </EndProperty>
+      <EndProperty Name="BookGiving">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PublicationBookGiving" TypeName="Library.PublicationBookGiving" StoreEntitySet="BookGivingSet">
+      <EndProperty Name="Publication">
+        <ScalarProperty Name="Id" ColumnName="Publication_Id" />
+      </EndProperty>
+      <EndProperty Name="BookGiving">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LibrarianBookReturning" TypeName="Library.LibrarianBookReturning" StoreEntitySet="BookReturningSet">
+      <EndProperty Name="Librarian">
+        <ScalarProperty Name="Id" ColumnName="Librarian_Id" />
+      </EndProperty>
+      <EndProperty Name="BookReturning">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

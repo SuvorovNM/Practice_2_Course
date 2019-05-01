@@ -1,0 +1,76 @@
+﻿@using Practice.Models
+@model IEnumerable<Practice.Models.Reader>
+
+@{
+    ViewBag.Title = "Список читателей";
+}
+
+<h2>BooksCollection</h2>
+
+<p>
+    @Html.ActionLink("Добавить нового читателя", "Create")
+</p>
+<div class="form-group">
+    @Html.LabelFor(modelItem => modelItem.First().Library_Card, "ЧБ №: ", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(modelItem => modelItem.First().Library_Card, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(modelItem => modelItem.First().Library_Card, "", new { @class = "text-danger" })
+    </div>
+</div>
+<br />
+@Html.ActionLink("Поиск", "ReadersSearch")
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("ФИО")
+        </th>
+        <th>
+            @Html.DisplayName("Читательский билет")
+        </th>
+        <th>
+            @Html.DisplayName("Дата рождения")
+        </th>
+        <th>
+            @Html.DisplayName("Телефон")
+        </th>
+        <th>
+            @Html.DisplayName("Email")
+        </th>
+        <th>
+            @Html.DisplayName("Дата регистрации")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (Reader item in (IEnumerable<Reader>)ViewData["Readers"])
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FIO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Library_Card)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Registration_Date)
+            </td>
+            <td>
+                @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id }) |
+                @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+

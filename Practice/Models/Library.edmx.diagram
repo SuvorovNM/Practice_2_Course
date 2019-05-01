@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6c748eb397f04f9a93656d35bc84b7aa" Name="Diagram1" >
+        <EntityTypeShape EntityType="Library.Address" Width="1.5" PointX="0.5" PointY="0.5" />
+        <EntityTypeShape EntityType="Library.Person" Width="1.5" PointX="2.875" PointY="0.5" />
+        <AssociationConnector Association="Library.AddressPerson" />
+        <EntityTypeShape EntityType="Library.Reader" Width="1.5" PointX="4.5" PointY="3.5" />
+        <EntityTypeShape EntityType="Library.Librarian" Width="1.5" PointX="0.875" PointY="3.375" />
+        <InheritanceConnector EntityType="Library.Reader" />
+        <InheritanceConnector EntityType="Library.Librarian" ManuallyRouted="true" >
+          <ConnectorPoint PointX="3.625" PointY="2.672587890625" />
+          <ConnectorPoint PointX="3.625" PointY="3.1479166666666671" />
+          <ConnectorPoint PointX="1.625" PointY="3.1479166666666671" />
+          <ConnectorPoint PointX="1.625" PointY="3.375" />
+        </InheritanceConnector>
+        <EntityTypeShape EntityType="Library.Publication" Width="1.5" PointX="6" PointY="6.25" />
+        <EntityTypeShape EntityType="Library.Publisher" Width="1.5" PointX="6" PointY="10.125" />
+        <AssociationConnector Association="Library.PublisherPublication" />
+        <EntityTypeShape EntityType="Library.Penalty" Width="1.5" PointX="0.5" PointY="8.25" />
+        <EntityTypeShape EntityType="Library.BookGiving" Width="1.5" PointX="3" PointY="5.5" />
+        <EntityTypeShape EntityType="Library.BookReturning" Width="1.5" PointX="2.875" PointY="8.5" />
+        <AssociationConnector Association="Library.PenaltyBookReturning" />
+        <AssociationConnector Association="Library.BookReturningBookGiving" />
+        <AssociationConnector Association="Library.ReaderBookGiving" />
+        <AssociationConnector Association="Library.LibrarianBookGiving" />
+        <AssociationConnector Association="Library.PublicationBookGiving" />
+        <AssociationConnector Association="Library.LibrarianBookReturning" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
