@@ -1,1 +1,8 @@
         <tr><td><p> </p></td></tr>
+
+form-control
+
+<i class='fa fa-calendar'></i>
+
+ViewBag.Title = "Home Page";
+@{ Layout = null; }

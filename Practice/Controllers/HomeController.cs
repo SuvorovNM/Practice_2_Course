@@ -15,7 +15,7 @@ namespace Practice.Controllers
         }
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("SignIn", "Library");
         }
 
         public ActionResult About()

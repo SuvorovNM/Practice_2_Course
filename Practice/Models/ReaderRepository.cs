@@ -54,5 +54,24 @@ namespace Practice.Models
             rd.Address.Flat = t.Address.Flat;
             cont.SaveChanges();
         }
+        public void Add(Reader r)
+        {
+            DateTime Today = DateTime.Today;
+            r.Registration_Date = Today;
+            int MaxLibTicket = (from t in cont.PersonSet where (t as Reader != null) select (t as Reader).Library_Card).Max();
+            r.Library_Card = MaxLibTicket + 1;
+            cont.PersonSet.Add(r);
+            cont.SaveChanges();
+        }
+        public void DeleteReader(int id)
+        {
+            Reader t = GetReader(id);
+            try
+            {
+                cont.PersonSet.Remove(t);
+                cont.SaveChanges();
+            }
+            catch { }
+        }
     }
 }

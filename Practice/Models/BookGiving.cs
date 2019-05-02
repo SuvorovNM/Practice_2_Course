@@ -11,9 +11,12 @@ namespace Practice.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class BookGiving
     {
+        //[Key,ForeignKey("BookReturning")]
         public int Id { get; set; }
         public System.DateTime Give_Date { get; set; }
         public System.DateTime Expected_Return_Date { get; set; }

@@ -11,13 +11,17 @@ namespace Practice.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class BookReturning
     {
+        [Key, ForeignKey("BookGiving")]
         public int Id { get; set; }
         public System.DateTime Real_Return_Date { get; set; }
     
         public virtual Penalty Penalty { get; set; }
+        [Required]
         public virtual BookGiving BookGiving { get; set; }
         public virtual Librarian Librarian { get; set; }
     }
