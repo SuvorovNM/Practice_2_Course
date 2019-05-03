@@ -13,31 +13,57 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <p align="center" style="color:#000000; font-size:30px"> Авторизация в ИС "Библиотека"</p>
-    <p align="center"style="font-size:20px">
-        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-    </p>
-        <div class="form-horizontal">
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.Staff_Number, "Штатный номер: ", htmlAttributes: new { @class = "control-label col-md-5 text-md-right" })
-                <div class="col-md-7">
-                    @Html.EditorFor(model => model.Staff_Number, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Staff_Number, "", new { @class = "text-danger" })
+<style>
+    .Authorize-lib {
+        border-width: 1px;
+        border-color: black;
+        border-style: groove;
+        width: 420px;
+        padding: 20px;
+        margin: auto;
+        border-radius: 10px;
+        background:#ffffff;
+    }
+</style>
+<style>
+    body{
+        background: #ffffec;
+        background-image:url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:cover;
+    }
+</style>
+<body>
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+    <p align="center" style="color:#ffffff; font-size:30px"><b>Авторизация в ИС "Библиотека"</b> </p>
+        <p align="center" style="font-size:20px">
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </p>
+        <div class="Authorize-lib">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Staff_Number, "Штатный номер: ", htmlAttributes: new { @class = "control-label col-md-5 text-md-right" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.Staff_Number, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Staff_Number, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, "Пароль: ", htmlAttributes: new { @class = "control-label col-md-5 text-md-right" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Password, "Пароль: ", htmlAttributes: new { @class = "control-label col-md-5 text-md-right" })
-                <div class="col-md-7">
-                    @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                    <input type="submit" value="Вход" class="btn btn-default" style="color:#000000; font-size:22px; width:100px" />
-
-                </div>
-            </div>
+            <p align="center">
+                <input type="submit" value="Войти в систему" class="btn btn-default" style="color:#000000; font-size:20px; width:300px" />
+            </p>
         </div>
-        }
+    }
+</body>

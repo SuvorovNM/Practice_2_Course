@@ -41,13 +41,13 @@ namespace Practice.Controllers
             IEnumerable<Reader> readers = DM.Rd.readers();
             if (CB_Library_Card)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Library_Card == LT select t);
-            if (CB_FIO)
+            if (CB_FIO&& gotten.FIO!=null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.FIO.Contains(gotten.FIO) select t);
-            if (CB_Birth)
+            if (CB_Birth && gotten.Birthday != null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Birthday == gotten.Birthday select t);
-            if (CB_Phone)
+            if (CB_Phone && gotten.Phone_Number != null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Phone_Number == gotten.Phone_Number select t);
-            if (CB_Reg)
+            if (CB_Reg && gotten.Registration_Date != null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Registration_Date == gotten.Registration_Date select t);
             ViewData["Readers"] = readers;
             return View();

@@ -1,103 +1,203 @@
 ﻿@using Practice.Models
 @model IEnumerable<Practice.Models.Reader>
-
 @{
     ViewBag.Title = "Список читателей";
 }
-
-<h2>BooksCollection</h2>
-
-<p>
-    @Html.ActionLink("Добавить нового читателя", "AddReader")
-</p>
-<form method="post" action="">
-    <table>
-        <tr><td><p>Фильтры</p></td></tr>
-        <tr>
-            <td>Читательский билет: </td>
-            <td><input type="text" name="Library_Card" placeholder="Номер Чит. Билета" /></td>
-            <td><input type="checkbox" name="CB_Library_Card" value="true" /></td>
-        </tr>
-        <tr><td><p> </p></td></tr>
-        <tr>
-            <td>Имя: </td>
-            <td><p><input type="text" name="FIO" placeholder="ФИО" /></p></td>
-            <td><input type="checkbox" name="CB_FIO" value="true" /></td>
-        </tr>
-        <tr>
-            <td>Дата рождения: </td>
-            <td><p><input type="date" name="Birthday" /></p></td>
-            <td><input type="checkbox" name="CB_Birth" value="true" /></td>
-        </tr>
-        <tr>
-            <td>Номер телефона: </td>
-            <td><p><input type="text" name="Phone_Number" /></p></td>
-            <td><input type="checkbox" name="CB_Phone" value="true" /></td>
-        </tr>
-        <tr>
-            <td>Дата регистрации: </td>
-            <td><p><input type="date" name="Registration_Date" /></p></td>
-            <td><input type="checkbox" name="CB_Reg" value="true" /></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Поиск" /></td>
-        </tr>
-    </table>
-</form>
-<br />
-
-<br />
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("ФИО")
-        </th>
-        <th>
-            @Html.DisplayName("Читательский билет")
-        </th>
-        <th>
-            @Html.DisplayName("Дата рождения")
-        </th>
-        <th>
-            @Html.DisplayName("Телефон")
-        </th>
-        <th>
-            @Html.DisplayName("Email")
-        </th>
-        <th>
-            @Html.DisplayName("Дата регистрации")
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (Reader item in (IEnumerable<Reader>)ViewData["Readers"])
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FIO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Library_Card)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Birthday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone_Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Registration_Date)
-            </td>
-            <td>
-                @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id }) |
-                @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
-            </td>
-        </tr>
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+<style>
+    .Mainpart {
+        border-width: 1px;
+        border-color: black;
+        border-style: groove;
+        width: 1100px;
+        padding: 20px;
+        margin: auto;
+        border-radius: 10px;
+        background: #ffffff;
+    }
+</style>
+<style>
+    .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 5px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    .Ncheckbox {
+        padding: 15px;
+    }
+</style>
+<style>
+    .css-checkbox {
+        width: 20px;
+        height: 20px;
+        position:center;
+    }
+</style>
+<script>
+    function disp(form) {
+        if (form.style.display == "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
+<style>
+    input, label {
+        display: inline-block;
+        vertical-align: baseline;
     }
 
-</table>
+    ._top input, ._top label {
+        vertical-align: top;
+    }
+
+    ._middle input, ._middle label {
+        vertical-align: middle;
+    }
+
+    ._bottom input, ._bottom label {
+        vertical-align: bottom;
+    }
+</style>
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Список читателей</b></h2>
+        <form method="post" action="">
+            <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
+            <br />
+            <br />
+            <table id="Filters" style="display:none">
+                <tr><td></td></tr>
+
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" id="CB_LC" class="css-checkbox" name="CB_Library_Card" value="true" /> Читательский билет:
+                        </div>
+                    </td>
+
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr><td><input type="text" name="Library_Card" class="form-control" placeholder="Номер Чит. Билета" /></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_FIO" value="true" /> Имя:
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr><td><input type="text" name="FIO" class="form-control" placeholder="ФИО" /></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Birth" value="true" /> Дата рождения:
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr><td><p><input type="date" name="Birthday" class="form-control" /></p></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Phone" value="true" /> Номер телефона:
+                        </div>
+                    </td>
+
+                    <td></td>
+                </tr>
+                <tr><td><p><input type="text" name="Phone_Number" class="form-control" /></p></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Reg" value="true" /> Дата регистрации:
+                        </div>
+                    </td>
+
+                    <td></td>
+                </tr>
+                <tr><td><p><input type="date" name="Registration_Date" class="form-control" /></p></td></tr>
+                <tr>
+                    <td><input type="submit" class="button" value="Поиск" /></td>
+                </tr>
+            </table>
+        </form>
+        <form action="/Library/ReadersCollection"><input type="submit" class="button" value="Сброс" /></form>
+        <br />
+        <p>
+            @Html.ActionLink("Добавить нового читателя", "AddReader")
+        </p>
+        <br />
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("ФИО")
+                </th>
+                <th>
+                    @Html.DisplayName("Читательский билет")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата рождения")
+                </th>
+                <th>
+                    @Html.DisplayName("Телефон")
+                </th>
+                <th>
+                    @Html.DisplayName("Email")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата регистрации")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (Reader item in (IEnumerable<Reader>)ViewData["Readers"])
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Library_Card)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Birthday)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Registration_Date)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id }) |
+                        @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</body>
 
