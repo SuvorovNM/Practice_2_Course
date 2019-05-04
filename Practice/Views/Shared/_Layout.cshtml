@@ -8,7 +8,25 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/css")
     @Scripts.Render("~/bundles/modernizr")
+    @using Practice.Models
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 </head>
+<script>
+    function ToWhite(x) {
+        x.style.color = "#ffffff";
+    }
+    function ToGrey(x) {
+        x.style.color = "#A9A9A9";
+    }
+    function ToSalmon(x) {
+        x.style.color = "#ffa07a";
+    }
+</script>
+<style>
+    li.rightcol {
+        text-align: right;
+    }
+</style>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -18,13 +36,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("ИС Библиотека", "SignIn", "Library", new { area = "" }, new { @class = "navbar-brand" })
+                <a href="/Library/ReadersCollection"><i class="fa fa-home" aria-hidden="true" style="font-size:48px; color:darkgrey;" onmouseover="ToWhite(this)" onmouseout="ToGrey(this)"></i></a>
+
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Домашняя страница", "Index", "Home")</li>
+                <ul class="nav navbar-nav" style="font-size:22px; font-weight:bold">
                     <li>@Html.ActionLink("Читатели", "ReadersCollection", "Library")</li>
                     <li>@Html.ActionLink("Книги", "BooksCollection", "Library")</li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style="font-size:22px; font-weight:bold;color: #f98012;">
+                    
+                    <li><a href="/Library/ReadersCollection"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a></li>
                 </ul>
             </div>
         </div>

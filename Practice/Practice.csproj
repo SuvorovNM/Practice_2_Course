@@ -241,6 +241,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\themes\CBstyle.css" />
+    <Content Include="Content\themes\MyStyles.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -300,6 +301,7 @@
     <Content Include="Views\Library\ReadersSearch.cshtml" />
     <Content Include="Views\Library\AddReader.cshtml" />
     <Content Include="Views\Library\SignIn.cshtml" />
+    <Content Include="Views\Library\AddBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

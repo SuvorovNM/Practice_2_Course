@@ -1,0 +1,53 @@
+body {
+        background: #ffffec;
+        background-image: url(../base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+.Mainpart {
+        border-width: 1px;
+        border-color: black;
+        border-style: groove;
+        width: 1100px;
+        padding: 20px;
+        margin: auto;
+        border-radius: 10px;
+        background: #ffffff;
+    }
+.button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 5px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        
+    }
+.Ncheckbox {
+        padding: 15px;
+    }
+.css-checkbox {
+        width: 20px;
+        height: 20px;
+        position:center;
+    }
+input, label {
+        display: inline-block;
+        vertical-align: baseline;
+    }
+
+._top input, ._top label {
+        vertical-align: top;
+    }
+
+._middle input, ._middle label {
+        vertical-align: middle;
+    }
+
+._bottom input, ._bottom label {
+        vertical-align: bottom;
+    }

@@ -4,79 +4,178 @@
 @{
     ViewBag.Title = "Список книг";
 }
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+<script>
+    function disp(form) {
+        if (form.style.display == "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Список книг</b></h2>
+        <form method="post" action="">
+            <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
+            <br />
+            <br />
+            <table id="Filters" style="display:none">
+                <tr><td></td></tr>
 
-<h2>BooksCollection</h2>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" id="CB_Id" class="css-checkbox" name="CB_Id" value="true" /> Уникальный номер:
+                        </div>
+                    </td>
 
-<p>
-    @Html.ActionLink("Добавить новую книгу", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Название")
-        </th>
-        <th>
-            @Html.DisplayName("ББК")
-        </th>
-        <th>
-            @Html.DisplayName("Автор")
-        </th>
-        <th>
-            @Html.DisplayName("Наличие")
-        </th>
-        <th>
-            @Html.DisplayName("ISBN/ISSN")
-        </th>
-        <th>
-            @Html.DisplayName("Страницы ")
-        </th>
-        <th>
-            @Html.DisplayName("№ выпуска/тома")
-        </th>
-        <th>
-            @Html.DisplayName("Издательство")
-        </th>
-        <th>
-            @Html.DisplayName("Год выпуска")
-        </th>
-        <th></th>
-    </tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr><td><input type="number" min="1" name="Id" class="form-control" placeholder="Номер книги" /></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Name" value="true" /> Название:
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr><td><input type="text" name="Name" class="form-control" placeholder="Название" /></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Author" value="true" /> Автор
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr><td><p><input type="text" name="Author" class="form-control" placeholder="Автор книги" /></p></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_BBK" value="true" /> ББК:
+                        </div>
+                    </td>
 
-@foreach (Publication item in (IEnumerable<Publication>)ViewData["Books"]) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BBK)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Author)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Available)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ISBN)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Page_Count)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Release_Number)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Publisher.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Year)
-        </td>
-        <td>
-            @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
+                    <td></td>
+                </tr>
+                <tr><td><p><input type="text" name="BBK" class="form-control" placeholder="ББК" /></p></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Pub" value="true" /> Издательство:
+                        </div>
+                    </td>
+                </tr>
+                <tr><td><p><input type="text" name="Publisher.Name" class="form-control" placeholder="Название издательства" /></p></td></tr>
+                <tr>
+                    <td>
+                        <div class="_bottom">
+                            <input type="checkbox" class="css-checkbox" name="CB_Avail" value="true" /> Наличие:
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+                            <select id="Select1" class="form-control" name="AvailableT">
+                                <option>Есть в наличии</option>
+                                <option>Нет в наличии</option>
+                            </select>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="submit" class="button" value="Поиск" /></td>
+                </tr>
 
-</table>
+            </table>
+        </form>
+        <a href="/Library/BooksCollection"><input type="button" class="button" value="Сброс" /></a><a href="/Library/AddBook"><input type="submit" class="button" value="Добавить" style="float:right" /></a>
+        <br />
+        <br />
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Название")
+                </th>
+                <th>
+                    @Html.DisplayName("ББК")
+                </th>
+                <th>
+                    @Html.DisplayName("Автор")
+                </th>
+                <th>
+                    @Html.DisplayName("Наличие")
+                </th>
+                <th>
+                    @Html.DisplayName("ISBN/ISSN")
+                </th>
+                <th>
+                    @Html.DisplayName("Страницы ")
+                </th>
+                <th>
+                    @Html.DisplayName("№ выпуска/тома")
+                </th>
+                <th>
+                    @Html.DisplayName("Издательство")
+                </th>
+                <th>
+                    @Html.DisplayName("Год выпуска")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (Publication item in (IEnumerable<Publication>)ViewData["Books"])
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BBK)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Available)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Page_Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Release_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>

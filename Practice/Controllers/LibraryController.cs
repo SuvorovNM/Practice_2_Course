@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Practice.Controllers
 {
-    public class LibraryController:Controller
+    public class LibraryController : Controller
     {
         static string patEmail = @"^(?(')('.+?(?<!\\)'@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
         //Регулярное выражение для поля "Город":
@@ -34,14 +34,14 @@ namespace Practice.Controllers
             else return RedirectToAction("SignIn");
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ReadersCollection(Reader gotten, bool CB_Library_Card=false, bool CB_FIO=false, bool CB_Birth=false, bool CB_Phone=false, bool CB_Reg=false)
+        public ActionResult ReadersCollection(Reader gotten, bool CB_Library_Card = false, bool CB_FIO = false, bool CB_Birth = false, bool CB_Phone = false, bool CB_Reg = false)
         {
             int LT = gotten.Library_Card;
             //IEnumerable<Reader> readers = (from t in DM.Rd.readers() where t.Library_Card == LT select t);
             IEnumerable<Reader> readers = DM.Rd.readers();
             if (CB_Library_Card)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Library_Card == LT select t);
-            if (CB_FIO&& gotten.FIO!=null)
+            if (CB_FIO && gotten.FIO != null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.FIO.Contains(gotten.FIO) select t);
             if (CB_Birth && gotten.Birthday != null)
                 readers = readers.Intersect(from t in DM.Rd.readers() where t.Birthday == gotten.Birthday select t);
@@ -55,23 +55,118 @@ namespace Practice.Controllers
         //[AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReadersSearch(int tmp)
         {
-            //string temp = VD.ToString();
-            //string t = ViewData["Id"].ToString();
-            // IEnumerable<Reader> readers = (from t in DM.Rd.readers() where t.Id == gotten.Id select t);
-            //ViewData["Readers"] = readers;
             ViewData["Readers"] = DM.Rd.readers();
             return View();
-            //ViewData["Readers"] = DM.Rd.readers().Where()
         }
         public ActionResult LibsCollection()
         {
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult BooksCollection()
         {
-            ViewData["Books"] = DM.Book.publications();
+            Librarian CurLib = (Librarian)Session["CurUsr"];
+            if (CurLib != null)
+            {
+                ViewData["Books"] = DM.Book.publications();
+                return View();
+            }
+            else return RedirectToAction("SignIn");
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult BooksCollection(Publication gotten, bool CB_Id = false, bool CB_Name = false, bool CB_Author = false, bool CB_BBK = false, bool CB_Pub = false, bool CB_Avail = false, string AvailableT = "")
+        {
+            IEnumerable<Publication> pubs = DM.Book.publications();
+            if (CB_Id)
+            {
+                pubs = pubs.Intersect(DM.Book.publicationsById(gotten.Id));
+            }
+            if (CB_Name && gotten.Name != null)
+            {
+                pubs = pubs.Intersect(DM.Book.publicationsByName(gotten.Name));
+            }
+            if (CB_Author && gotten.Author != null)
+            {
+                pubs = pubs.Intersect(DM.Book.publicationsByAuthor(gotten.Author));
+            }
+            if (CB_BBK && gotten.BBK != null)
+            {
+                pubs = pubs.Intersect(DM.Book.publicationsByBBK(gotten.BBK));
+            }
+            if (CB_Pub && gotten.Publisher != null && gotten.Publisher.Name != null)
+            {
+                pubs = pubs.Intersect(DM.Book.publicationsByPub(gotten.Publisher.Name));
+            }
+            if (CB_Avail)
+            {
+                bool Avail = true;
+                if (AvailableT == "Нет в наличии") Avail = false;
+                pubs = pubs.Intersect(DM.Book.publicationsByAvail(Avail));
+            }
+            ViewData["Books"] = pubs;
             return View();
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult AddBook()
+        {
+            var info = DM.Pub.publishers()
+                .Select(s => new
+                {
+                    Publishers = s.Id,
+                    Descr = s.City + ": " + s.Name
+                }).ToList();
+            ViewData["Publishers"] = new SelectList(info, "Publishers", "Descr");
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddBook(Publication p, int Publishers)
+        {
+            if (string.IsNullOrWhiteSpace(p.Name))
+                ModelState.AddModelError("Name", "Укажите название книги!");
+            if (string.IsNullOrWhiteSpace(p.Author))
+                ModelState.AddModelError("Author", "Укажите название книги!");
+            if (string.IsNullOrWhiteSpace(p.BBK))
+                ModelState.AddModelError("BBK", "Укажите ББК книги!");
+            if (string.IsNullOrWhiteSpace(p.UDK))
+                ModelState.AddModelError("UDK", "Укажите UDK книги!");
+            if (string.IsNullOrWhiteSpace(p.ISBN))
+                ModelState.AddModelError("ISBN", "Укажите ISBN книги!");
+            if (p.Page_Count < 1)
+                ModelState.AddModelError("Page_Count", "Некорректное количество страниц!");
+            if (p.Year < 1800)
+                ModelState.AddModelError("Year", "Некорректный год!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    p.Available = true;
+                    DM.Book.Add(p, Publishers);
+                    return RedirectToAction("BooksCollection");
+                }
+                catch
+                {
+                    var info = DM.Pub.publishers()
+                                .Select(s => new
+                                {
+                                    Publishers = s.Id,
+                                    Descr = s.City + ": " + s.Name
+                                }).ToList();
+                    ViewData["Publishers"] = new SelectList(info, "Publishers", "Descr");
+                    return View();
+                }
+            }
+            else
+            {
+                var info = DM.Pub.publishers()
+                                .Select(s => new
+                                {
+                                    Publishers = s.Id,
+                                    Descr = s.City + ": " + s.Name
+                                }).ToList();
+                ViewData["Publishers"] = new SelectList(info, "Publishers", "Descr");
+                return View();
+            }
         }
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ChangeReader(int id)
@@ -92,7 +187,7 @@ namespace Practice.Controllers
                 ModelState.AddModelError("Email", "Введите корректный Email!");
             /*if (rd.Birthday==null||rd.Birthday.Year<1900)
                 ModelState.AddModelError("Birthday", "Введите корректный ДР!");*/
-            if (string.IsNullOrWhiteSpace(rd.Address.City)||!rgCity.IsMatch(rd.Address.City))
+            if (string.IsNullOrWhiteSpace(rd.Address.City) || !rgCity.IsMatch(rd.Address.City))
                 ModelState.AddModelError("Address.City", "Введите корректный город!");
             if (string.IsNullOrWhiteSpace(rd.Address.Region))
                 ModelState.AddModelError("Address.Region", "Укажите регион!");
@@ -100,7 +195,7 @@ namespace Practice.Controllers
                 ModelState.AddModelError("Address.Street", "Укажите улицу!");
             if (string.IsNullOrWhiteSpace(rd.Address.House))
                 ModelState.AddModelError("Address.House", "Укажите дом!");
-            if (rd.Address.Flat<1)
+            if (rd.Address.Flat < 1)
                 ModelState.AddModelError("Address.Flat", "Укажите квартиру!");
             if (ModelState.IsValid)
             {
@@ -118,7 +213,7 @@ namespace Practice.Controllers
                 ModelState.AddModelError("Phone_Number", "Введите корректный номер телефона!");
             if (string.IsNullOrWhiteSpace(t.Email) || !rgEmail.IsMatch(t.Email))
                 ModelState.AddModelError("Email", "Введите корректный Email!");
-            if (t.Birthday==null||t.Birthday.Year<1900)
+            if (t.Birthday == null || t.Birthday.Year < 1900)
                 ModelState.AddModelError("Birthday", "Введите корректный ДР!");
             if (string.IsNullOrWhiteSpace(t.Address.City) || !rgCity.IsMatch(t.Address.City))
                 ModelState.AddModelError("Address.City", "Введите корректный город!");
@@ -157,7 +252,7 @@ namespace Practice.Controllers
             return RedirectToAction("ReadersCollection");
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SignIn(int Staff_Number=0, string Password="")
+        public ActionResult SignIn(int Staff_Number = 0, string Password = "")
         {
             //if (lib!=null)            
             Librarian lib = DM.Lib.LoginIn(Staff_Number, Password);
