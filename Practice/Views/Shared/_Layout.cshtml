@@ -43,6 +43,11 @@
                 <ul class="nav navbar-nav" style="font-size:22px; font-weight:bold">
                     <li>@Html.ActionLink("Читатели", "ReadersCollection", "Library")</li>
                     <li>@Html.ActionLink("Книги", "BooksCollection", "Library")</li>
+                    <li>@Html.ActionLink("Издательства", "PubsCollection", "Library")</li>
+                    @if ((((Librarian)Session["CurUsr"]).Privilege == 1))
+                    {
+                        <li>@Html.ActionLink("Издательства", "LibsCollection", "Library")</li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right" style="font-size:22px; font-weight:bold;color: #f98012;">
                     

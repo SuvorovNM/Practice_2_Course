@@ -21,6 +21,7 @@ namespace Practice.Controllers
         {
             DM = _DM;
         }
+        #region ReadersCollection
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ReadersCollection()
         {
@@ -52,17 +53,81 @@ namespace Practice.Controllers
             ViewData["Readers"] = readers;
             return View();
         }
-        //[AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReadersSearch(int tmp)
         {
             ViewData["Readers"] = DM.Rd.readers();
             return View();
         }
+        #endregion
         public ActionResult LibsCollection()
         {
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
+        public ActionResult PubsCollection()
+        {
+            ViewData["Pubs"] = DM.Pub.publishers();
+            return View();
+        }
+        #region ChangePub
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ChangePub(int id)
+        {
+            Publisher p = DM.Pub.GetPublisher(id);
+            ViewData.Model = p;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ChangePub(int id,Publisher p)
+        {
+            if (string.IsNullOrWhiteSpace(p.Name))
+                ModelState.AddModelError("Name", "Укажите название издательства!");
+            if (string.IsNullOrWhiteSpace(p.City))
+                ModelState.AddModelError("City", "Укажите город издательства!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DM.Pub.Edit(id, p);
+                    return RedirectToAction("PubsCollection");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else return View();
+        }
+        #endregion
+        #region AddPub
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult AddPub()
+        {
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddPub(Publisher p)
+        {
+            if (string.IsNullOrWhiteSpace(p.Name))
+                ModelState.AddModelError("Name", "Укажите название издательства!");
+            if (string.IsNullOrWhiteSpace(p.City))
+                ModelState.AddModelError("City", "Укажите город издательства!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DM.Pub.Add(p);
+                    return RedirectToAction("PubsCollection");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else return View();
+        }
+        #endregion
+        #region BooksCollection
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult BooksCollection()
         {
@@ -107,6 +172,8 @@ namespace Practice.Controllers
             ViewData["Books"] = pubs;
             return View();
         }
+        #endregion
+        #region Addbook
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddBook()
         {
@@ -168,6 +235,8 @@ namespace Practice.Controllers
                 return View();
             }
         }
+        #endregion
+        #region ChangeReader
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ChangeReader(int id)
         {
@@ -204,6 +273,81 @@ namespace Practice.Controllers
             }
             return View();
         }
+        #endregion
+        #region ChangeBook
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ChangeBook(int id)
+        {
+            Publication p = DM.Book.GetPublication(id);
+            ViewData["Avail"] = p.Available;
+            ViewData.Model = p;
+            var info = DM.Pub.publishers()
+               .Select(s => new
+               {
+                   Publishers = s.Id,
+                   Descr = s.City + ": " + s.Name
+               }).ToList();
+            ViewData["Pubs"] = new SelectList(info, "Publishers", "Descr", p.Publisher.Id);
+            ViewData["Chosen"] = p.Publisher.Id;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ChangeBook(int id, Publication p, int Publishers, string AvailableT)
+        {
+            Publisher pub = DM.Pub.GetPublisher(Publishers);
+            bool Avail = false;
+            Avail = AvailableT == "Есть в наличии";            
+            if (string.IsNullOrWhiteSpace(p.Name))
+                ModelState.AddModelError("Name", "Укажите название!");
+            if (string.IsNullOrWhiteSpace(p.UDK))
+                ModelState.AddModelError("UDK", "Укажите УДК!");
+            if (string.IsNullOrWhiteSpace(p.BBK))
+                ModelState.AddModelError("BBK", "Укажите ББК!");
+            if (string.IsNullOrWhiteSpace(p.Author))
+                ModelState.AddModelError("Author", "Укажите автора!");
+            if (string.IsNullOrWhiteSpace(p.ISBN))
+                ModelState.AddModelError("ISBN", "Укажите ISBN!");
+            if (p.Page_Count < 1)
+                ModelState.AddModelError("Page_Count", "Некорректное количество страниц!");
+            if (p.Year < 1800)
+                ModelState.AddModelError("Year", "Некорректный год!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    p.Publisher = pub;
+                    p.Available = Avail;
+                    DM.Book.Edit(id, p);
+                    return RedirectToAction("BooksCollection");
+                }
+                catch
+                {
+                    var info = DM.Pub.publishers()
+                                .Select(s => new
+                                {
+                                    Publishers = s.Id,
+                                    Descr = s.City + ": " + s.Name
+                                }).ToList();
+                    ViewData["Pubs"] = new SelectList(info, "Publishers", "Descr");
+                    ViewData["Avail"] = Avail;
+                    return View();
+                }
+            }
+            else
+            {
+                var info = DM.Pub.publishers()
+                                .Select(s => new
+                                {
+                                    Publishers = s.Id,
+                                    Descr = s.City + ": " + s.Name
+                                }).ToList();
+                ViewData["Pubs"] = new SelectList(info, "Publishers", "Descr");
+                ViewData["Avail"] = Avail;
+                return View();
+            }
+        }
+        #endregion
+        #region AddReader
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddReader(Reader t)
         {
@@ -246,11 +390,18 @@ namespace Practice.Controllers
             t.Birthday = new DateTime(1900, 01, 01);
             return View();
         }
+        #endregion
         public ActionResult DeleteReader(int id)
         {
             DM.Rd.DeleteReader(id);
             return RedirectToAction("ReadersCollection");
         }
+        public ActionResult DeleteBook(int id)
+        {
+            DM.Book.Delete(id);
+            return RedirectToAction("BooksCollection");
+        }
+        #region SignIn
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SignIn(int Staff_Number = 0, string Password = "")
         {
@@ -275,5 +426,6 @@ namespace Practice.Controllers
             Session["CurUsr"] = null;
             return View();
         }
+        #endregion
     }
 }

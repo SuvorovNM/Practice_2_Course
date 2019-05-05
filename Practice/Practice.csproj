@@ -302,6 +302,11 @@
     <Content Include="Views\Library\AddReader.cshtml" />
     <Content Include="Views\Library\SignIn.cshtml" />
     <Content Include="Views\Library\AddBook.cshtml" />
+    <Content Include="Views\Library\PubsCollection.cshtml" />
+    <Content Include="Views\Library\AddPub.cshtml" />
+    <Content Include="Views\Library\ChangePub.cshtml" />
+    <Content Include="Views\Library\ChangeBook.cshtml" />
+    <Content Include="Views\Library\LibsCollection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,5 +1,5 @@
 ﻿@using Practice.Models
-@model IEnumerable<Practice.Models.Reader>
+@model IEnumerable<Practice.Models.Librarian>
 @{
     ViewBag.Title = "Список читателей";
 }
@@ -35,14 +35,14 @@
                 <tr>
                     <td>
                         <div class="_bottom">
-                            <input type="checkbox" id="CB_LC" class="css-checkbox" name="CB_Library_Card" value="true" /> Читательский билет:
+                            <input type="checkbox" class="css-checkbox" name="CB_Staff_Number" value="true" /> Штатный номер:
                         </div>
                     </td>
 
                     <td></td>
                     <td></td>
                 </tr>
-                <tr><td><input type="text" name="Library_Card" class="form-control" placeholder="Номер Чит. Билета" /></td></tr>
+                <tr><td><input type="text" name="Staff_Number" class="form-control" placeholder="1" /></td></tr>
                 <tr>
                     <td>
                         <div class="_bottom">
@@ -75,75 +75,74 @@
                 <tr>
                     <td>
                         <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_Reg" value="true" /> Дата регистрации:
+                            <input type="checkbox" class="css-checkbox" name="CB_Reg" value="true" /> Дата принятия:
                         </div>
                     </td>
 
                     <td></td>
                 </tr>
-                <tr><td><p><input type="date" name="Registration_Date" class="form-control" /></p></td></tr>
+                <tr><td><p><input type="date" name="Hiring_Date" class="form-control" /></p></td></tr>
                 <tr>
                     <td><input type="submit" class="button" value="Поиск" /></td>
                 </tr>
             </table>
         </form>
 
-        <a href="/Library/ReadersCollection"><input type="submit" class="button" value="Сброс" /></a><a href="/Library/AddReader"><input type="submit" class="button" value="Добавить" style="float:right"/></a>
-            <br />
-            <br />
-            <table class="table">
+        <a href="/Library/LibsCollection"><input type="submit" class="button" value="Сброс" /></a><a href="/Library/AddLib"><input type="submit" class="button" value="Добавить" style="float:right" /></a>
+        <br />
+        <br />
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("ФИО")
+                </th>
+                <th>
+                    @Html.DisplayName("Штатный номер")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата рождения")
+                </th>
+                <th>
+                    @Html.DisplayName("Телефон")
+                </th>
+                <th>
+                    @Html.DisplayName("Email")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата принятия")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (Librarian item in (IEnumerable<Librarian>)ViewData["Librarians"])
+            {
                 <tr>
-                    <th>
-                        @Html.DisplayName("ФИО")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Читательский билет")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Дата рождения")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Телефон")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Email")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Дата регистрации")
-                    </th>
-                    <th></th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Staff_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Birthday)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Hiring_Date)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id })
+                        @Html.ActionLink("Выбрать", "Details", new { id = item.Id })
+                        @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
+                    </td>
                 </tr>
+            }
 
-                @foreach (Reader item in (IEnumerable<Reader>)ViewData["Readers"])
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FIO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Library_Card)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Birthday)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Phone_Number)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Registration_Date)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id })
-                            @Html.ActionLink("Выбрать", "Details", new { id = item.Id })
-                            @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
-                        </td>
-                    </tr>
-                }
-
-            </table>
-</div>
+        </table>
+    </div>
 </body>
-
