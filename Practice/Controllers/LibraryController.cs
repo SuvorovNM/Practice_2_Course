@@ -64,6 +64,201 @@ namespace Practice.Controllers
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
+        #region AddLib
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult AddLib()
+        {
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddLib(Librarian t)
+        {
+            if (string.IsNullOrWhiteSpace(t.FIO))
+                ModelState.AddModelError("FIO", "Укажите имя!");
+            if (string.IsNullOrWhiteSpace(t.Phone_Number) || t.Phone_Number.Length < 11)
+                ModelState.AddModelError("Phone_Number", "Введите корректный номер телефона!");
+            if (string.IsNullOrWhiteSpace(t.Email) || !rgEmail.IsMatch(t.Email))
+                ModelState.AddModelError("Email", "Введите корректный Email!");
+            if (t.Birthday == null || t.Birthday.Year < 1900)
+                ModelState.AddModelError("Birthday", "Введите корректный ДР!");
+            else
+            {
+                string t1 = t.Birthday.Date.ToString("s");
+                ViewData["BD"] = t1.Substring(0, t1.IndexOf('T'));
+            }
+            if (string.IsNullOrWhiteSpace(t.Password))
+                ModelState.AddModelError("Password", "Укажите пароль!");
+            if (string.IsNullOrWhiteSpace(t.Address.City) || !rgCity.IsMatch(t.Address.City))
+                ModelState.AddModelError("Address.City", "Введите корректный город!");
+            if (string.IsNullOrWhiteSpace(t.Address.Region))
+                ModelState.AddModelError("Address.Region", "Укажите регион!");
+            if (string.IsNullOrWhiteSpace(t.Address.Street))
+                ModelState.AddModelError("Address.Street", "Укажите улицу!");
+            if (string.IsNullOrWhiteSpace(t.Address.House))
+                ModelState.AddModelError("Address.House", "Укажите дом!");
+            if (t.Address.Flat < 1)
+                ModelState.AddModelError("Address.Flat", "Укажите квартиру!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DM.Lib.Add(t);
+                    return RedirectToAction("LibsCollection");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+        }
+        #endregion
+        #region LibChange
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult LibChange(int id = -1)
+        {
+            if (id == -1)
+            {
+                id = (int)Session["LibID"];
+            }
+            Librarian lib = DM.Lib.GetLibrarian(id);
+            ViewData["Lib"] = lib;
+            ViewData.Model = lib;
+            string t1 = lib.Birthday.Date.ToString("s");
+            ViewData["BD"] = t1.Substring(0, t1.IndexOf('T'));
+            string t2 = lib.Hiring_Date.Date.ToString("s");
+            ViewData["HD"] = t2.Substring(0, t2.IndexOf('T'));
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult LibChange(int id, Librarian t)
+        {
+            Librarian lib = DM.Lib.GetLibrarian(id);
+            ViewData["Lib"] = lib;
+            ViewData.Model = lib;
+            string t1 = lib.Birthday.Date.ToString("s");
+            ViewData["BD"] = t1.Substring(0, t1.IndexOf('T'));
+            string t2 = lib.Hiring_Date.Date.ToString("s");
+            ViewData["HD"] = t2.Substring(0, t2.IndexOf('T'));
+            if (string.IsNullOrWhiteSpace(t.FIO))
+                ModelState.AddModelError("FIO", "Укажите имя!");
+            if (string.IsNullOrWhiteSpace(t.Phone_Number) || t.Phone_Number.Length < 11)
+                ModelState.AddModelError("Phone_Number", "Введите корректный номер телефона!");
+            if (string.IsNullOrWhiteSpace(t.Email) || !rgEmail.IsMatch(t.Email))
+                ModelState.AddModelError("Email", "Введите корректный Email!");
+            if (t.Birthday == null || t.Birthday.Year < 1900)
+                ModelState.AddModelError("Birthday", "Введите корректный ДР!");
+            if (t.Hiring_Date == null || t.Hiring_Date.Year < 1900)
+                ModelState.AddModelError("Hiring_Date", "Введите корректную дату трудоустройства!");
+            if (string.IsNullOrWhiteSpace(t.Password))
+                ModelState.AddModelError("Password", "Укажите пароль!");
+            if (string.IsNullOrWhiteSpace(t.Address.City) || !rgCity.IsMatch(t.Address.City))
+                ModelState.AddModelError("Address.City", "Введите корректный город!");
+            if (string.IsNullOrWhiteSpace(t.Address.Region))
+                ModelState.AddModelError("Address.Region", "Укажите регион!");
+            if (string.IsNullOrWhiteSpace(t.Address.Street))
+                ModelState.AddModelError("Address.Street", "Укажите улицу!");
+            if (string.IsNullOrWhiteSpace(t.Address.House))
+                ModelState.AddModelError("Address.House", "Укажите дом!");
+            if (t.Address.Flat < 1)
+                ModelState.AddModelError("Address.Flat", "Укажите квартиру!");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DM.Lib.Edit(id, t);
+                    return RedirectToAction("LibsCollection");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else return View();
+        }
+        #endregion
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ReaderInfo(int id)
+        {
+            Reader rd = DM.Rd.GetReader(id);
+            ViewData["Reader"] = rd;
+            ViewData.Model = rd;
+            ViewData["BG"] = DM.BG.bookGivings(rd);
+            ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult GiveBook(int id)
+        {
+            Reader rd = DM.Rd.GetReader(id);
+            BookGiving bg = new BookGiving();
+            bg.Reader = rd;
+            bg.Librarian = (Librarian)Session["CurUsr"];
+            bg.Give_Date = DateTime.Today;
+            ViewData.Model = bg;
+            DateTime dt = DateTime.Today;
+            dt = new DateTime(dt.Year, dt.Month, dt.Day + 1);
+            string t = dt.ToString("s");
+            ViewData["ERD"] = t.Substring(0, t.IndexOf('T'));
+            Session["CurrentDate"] = t.Substring(0, t.IndexOf('T'));
+            Session["Book_OK"] = false;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult GiveBook(int id, BookGiving bg, int BookID = 0)
+        {
+            Publication p = null;
+            bool OK = false;
+            try
+            {
+                p = DM.Book.GetPublication(BookID);
+            }
+            catch { }
+            if (p != null)
+            {
+                if (p.Available)
+                {
+                    OK = true;
+                    bg.Publication = p;
+                    ViewData["BookID"] = BookID;
+                }
+            }
+            Reader rd = DM.Rd.GetReader(id);
+            bg.Reader = rd;
+            bg.Librarian = (Librarian)Session["CurUsr"];
+            bg.Give_Date = DateTime.Today;
+            ViewData.Model = bg;
+            try
+            {
+                if (Session["Book_OK"] != null && (bool)Session["Book_OK"])
+                {
+                    DM.BG.Add(bg);
+                    return RedirectToAction("/ReaderInfo/" + id);
+                }
+            }
+            catch { }
+            Session["Book_OK"] = OK;
+            string t = bg.Expected_Return_Date.ToString("s");
+            ViewData["ERD"] = t.Substring(0, t.IndexOf('T'));
+            return View();
+        }
+        #region LibInfo
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult LibInfo(int id)
+        {
+            Librarian lib = DM.Lib.GetLibrarian(id);
+            ViewData["Lib"] = lib;
+            ViewData.Model = lib;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult LibInfo(int id, Librarian Clib)
+        {
+            //RedirectToAction("LibChange", id);
+            Session["LibID"] = id;
+            return RedirectToAction("LibChange", id);
+        }
+        #endregion
         public ActionResult PubsCollection()
         {
             ViewData["Pubs"] = DM.Pub.publishers();
@@ -78,7 +273,7 @@ namespace Practice.Controllers
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangePub(int id,Publisher p)
+        public ActionResult ChangePub(int id, Publisher p)
         {
             if (string.IsNullOrWhiteSpace(p.Name))
                 ModelState.AddModelError("Name", "Укажите название издательства!");
@@ -296,7 +491,7 @@ namespace Practice.Controllers
         {
             Publisher pub = DM.Pub.GetPublisher(Publishers);
             bool Avail = false;
-            Avail = AvailableT == "Есть в наличии";            
+            Avail = AvailableT == "Есть в наличии";
             if (string.IsNullOrWhiteSpace(p.Name))
                 ModelState.AddModelError("Name", "Укажите название!");
             if (string.IsNullOrWhiteSpace(p.UDK))
@@ -400,6 +595,11 @@ namespace Practice.Controllers
         {
             DM.Book.Delete(id);
             return RedirectToAction("BooksCollection");
+        }
+        public ActionResult DeleteLib(int id)
+        {
+            DM.Lib.Delete(id);
+            return RedirectToAction("LibsCollection");
         }
         #region SignIn
         [AcceptVerbs(HttpVerbs.Post)]

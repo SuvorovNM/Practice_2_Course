@@ -1,0 +1,89 @@
+﻿@model Practice.Models.BookGiving
+
+@{
+    ViewBag.Title = "GiveBook";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <body>
+        <div class="Mainpart" style="width:600px">
+            <div class="form-horizontal">
+                <h4>BookGiving</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Reader, "Читатель: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" value="@Model.Reader.FIO" class="form-control" readonly />
+                        @Html.ValidationMessageFor(model => model.Give_Date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Publication, "Выдаваемая книга: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <div><input type="number" class="form-control" name="BookID" value="@ViewData["BookID"]"></div>
+                        @if (Session["Book_OK"] != null && (bool)Session["Book_OK"])
+                        {
+                            @Html.ValidationMessageFor(model => model.Publication.Id, "Книга есть в наличии!", new { @class = "text-danger", @style="color:green"})
+                        }
+                        else
+                        {
+                            @Html.ValidationMessageFor(model => model.Publication.Id, "Следует проверить книгу на наличие!", new { @class = "text-danger" })
+                        }
+                    </div>
+                </div>
+                <input type="submit" class="button" value="Проверить книгу" style="margin-left:250px; margin-bottom:10px" />
+                @if (Session["Book_OK"] != null && (bool)Session["Book_OK"])
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Publication.Name, "Выдаваемая книга: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <input type="text" value="@Model.Publication.Name" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Publication.Author, "Автор: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <input type="text" value="@Model.Publication.Author" class="form-control" readonly />
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Librarian, "Выдал книгу: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" value="@Model.Librarian.FIO" class="form-control" readonly />
+                        @Html.ValidationMessageFor(model => model.Give_Date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Expected_Return_Date, "Выдано до: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="Expected_Return_Date" value="@(ViewData["ERD"])" min="@Session["CurrentDate"]"/>
+                        @Html.ValidationMessageFor(model => model.Expected_Return_Date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" class="button" value="Выдать книгу" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </body>
+}
+

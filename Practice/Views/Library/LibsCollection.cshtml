@@ -25,70 +25,8 @@
 <body>
     <div class="Mainpart">
         <h2 align="center"><b>Список библиотекарей</b></h2>
-        <form method="post" action="">
-            <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
-            <br />
-            <br />
-            <table id="Filters" style="display:none">
-                <tr><td></td></tr>
 
-                <tr>
-                    <td>
-                        <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_Staff_Number" value="true" /> Штатный номер:
-                        </div>
-                    </td>
-
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr><td><input type="text" name="Staff_Number" class="form-control" placeholder="1" /></td></tr>
-                <tr>
-                    <td>
-                        <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_FIO" value="true" /> Имя:
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr><td><input type="text" name="FIO" class="form-control" placeholder="ФИО" /></td></tr>
-                <tr>
-                    <td>
-                        <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_Birth" value="true" /> Дата рождения:
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr><td><p><input type="date" name="Birthday" class="form-control" /></p></td></tr>
-                <tr>
-                    <td>
-                        <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_Phone" value="true" /> Номер телефона:
-                        </div>
-                    </td>
-
-                    <td></td>
-                </tr>
-                <tr><td><p><input type="text" name="Phone_Number" class="form-control" /></p></td></tr>
-                <tr>
-                    <td>
-                        <div class="_bottom">
-                            <input type="checkbox" class="css-checkbox" name="CB_Reg" value="true" /> Дата принятия:
-                        </div>
-                    </td>
-
-                    <td></td>
-                </tr>
-                <tr><td><p><input type="date" name="Hiring_Date" class="form-control" /></p></td></tr>
-                <tr>
-                    <td><input type="submit" class="button" value="Поиск" /></td>
-                </tr>
-            </table>
-        </form>
-
-        <a href="/Library/LibsCollection"><input type="submit" class="button" value="Сброс" /></a><a href="/Library/AddLib"><input type="submit" class="button" value="Добавить" style="float:right" /></a>
+        <a href="/Library/AddLib"><input type="submit" class="button" value="Добавить" style="float:right" /></a>
         <br />
         <br />
         <table class="table">
@@ -136,9 +74,16 @@
                         @Html.DisplayFor(modelItem => item.Hiring_Date)
                     </td>
                     <td>
-                        @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id })
-                        @Html.ActionLink("Выбрать", "Details", new { id = item.Id })
-                        @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
+                        @Html.ActionLink("Подробнее", "LibInfo", new { id = item.Id })
+                        @if (item.Privilege == 0)
+                        {
+                            @Html.ActionLink("Изменить", "LibChange", new { id = item.Id })
+                            @Html.ActionLink("Удалить", "DeleteLib", new { id = item.Id })
+                        }
+                        @if ((((Librarian)Session["CurUsr"]).Id == item.Id))
+                        {
+                            @Html.ActionLink("Изменить", "LibChange", new { id = item.Id })
+                        }
                     </td>
                 </tr>
             }

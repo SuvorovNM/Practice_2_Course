@@ -1,1 +1,3 @@
-<div class="col-md-offset-5 col-md-10"></div>
+<a href="/Library/LibInfo/@(((Librarian)Session["CurUsr"]).Id)"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a>
+
+fa fa-sign-out

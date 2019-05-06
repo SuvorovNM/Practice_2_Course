@@ -307,6 +307,11 @@
     <Content Include="Views\Library\ChangePub.cshtml" />
     <Content Include="Views\Library\ChangeBook.cshtml" />
     <Content Include="Views\Library\LibsCollection.cshtml" />
+    <Content Include="Views\Library\LibInfo.cshtml" />
+    <Content Include="Views\Library\LibChange.cshtml" />
+    <Content Include="Views\Library\AddLib.cshtml" />
+    <Content Include="Views\Library\ReaderInfo.cshtml" />
+    <Content Include="Views\Library\GiveBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

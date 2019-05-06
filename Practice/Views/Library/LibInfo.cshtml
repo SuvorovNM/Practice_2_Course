@@ -1,0 +1,141 @@
+﻿@model Practice.Models.Librarian
+@using Practice.Models
+@{
+    ViewBag.Title = "LibInfo";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <body>
+        <div class="Mainpart" style="width:600px">
+            <div>
+                <h2 align="center"><b>Информация о библиотекаре</b></h2>
+                <hr />
+                <dl class="dl-horizontal">
+
+                    <dt>
+                        @Html.DisplayName("ФИО: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.FIO)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Дата рождения: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Birthday)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Номер телефона: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Phone_Number)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Email: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Дата трудоустройства: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Hiring_Date)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Штатный номер: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Staff_Number)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Пароль: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Password)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Уровень привилений: ")
+                    </dt>
+
+
+                    @if (((Librarian)ViewData["Lib"]).Privilege == 1)
+                    {
+                        <dd>
+                            @Html.DisplayName("Библиотекарь-Администратор")
+                        </dd>
+                    }
+                    @if (((Librarian)ViewData["Lib"]).Privilege == 0)
+                    {
+                        <dd>
+                            @Html.DisplayName("Библиотекарь")
+                        </dd>
+                    }
+                    <dt>
+                        @Html.DisplayName("Регион: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Region)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Город: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.City)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Улица: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Street)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Дом: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.House)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Квартира: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Flat)
+                    </dd>
+
+                </dl>
+            </div>
+            <a href="/Library/LibsCollection"><input type="button" class="button" value="Назад" /></a><input type="submit" class="button" value="Изменить" style="float:right" />
+        </div>
+    </body>
+}

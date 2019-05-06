@@ -18,6 +18,8 @@ namespace Practice.Models
     {
         [Key, ForeignKey("BookGiving")]
         public int Id { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "Дата принятия книги")]
         public System.DateTime Real_Return_Date { get; set; }
     
         public virtual Penalty Penalty { get; set; }

@@ -40,18 +40,19 @@
 
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" style="font-size:22px; font-weight:bold">
+                <ul class="nav navbar-nav" style="font-size:20px; font-weight:bold">
                     <li>@Html.ActionLink("Читатели", "ReadersCollection", "Library")</li>
                     <li>@Html.ActionLink("Книги", "BooksCollection", "Library")</li>
                     <li>@Html.ActionLink("Издательства", "PubsCollection", "Library")</li>
                     @if ((((Librarian)Session["CurUsr"]).Privilege == 1))
                     {
-                        <li>@Html.ActionLink("Издательства", "LibsCollection", "Library")</li>
+                        <li>@Html.ActionLink("Библиотекари", "LibsCollection", "Library")</li>
                     }
                 </ul>
-                <ul class="nav navbar-nav navbar-right" style="font-size:22px; font-weight:bold;color: #f98012;">
-                    
-                    <li><a href="/Library/ReadersCollection"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a></li>
+                <ul class="nav navbar-nav navbar-right" style="font-size:20px; font-weight:bold;color: #f98012;">
+                    <li><a href="/Library/LibInfo/@(((Librarian)Session["CurUsr"]).Id)"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a></li>
+                    <li><a href="/Library/SignIn" target="_top"><i class="fa fa-sign-out" aria-hidden="true" style="font-size:30px; line-height:20px; vertical-align:top; color:darkgrey;" onmouseover="ToWhite(this)" onmouseout="ToGrey(this)"></i> </a></li>
+
                 </ul>
             </div>
         </div>

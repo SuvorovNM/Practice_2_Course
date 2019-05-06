@@ -73,5 +73,12 @@ namespace Practice.Models
             }
             catch { }
         }
+        public decimal GetPenalty(Reader r)
+        {
+            IEnumerable<decimal> dc = (from t in cont.BookReturningSet where t.BookGiving.Reader.Id == r.Id && t.Penalty != null && t.Penalty.Sum > 0 select t.Penalty.Sum);
+            if (dc != null)
+                return dc.Sum();
+            else return 0;
+        }
     }
 }

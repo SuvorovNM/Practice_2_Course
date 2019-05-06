@@ -24,7 +24,7 @@
 </script>
 <body>
     <div class="Mainpart">
-        <h2 align="center"><b>Список библиотекарей</b></h2>
+        <h2 align="center"><b>Список читателей</b></h2>
         <form method="post" action="">
             <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
             <br />
@@ -137,7 +137,7 @@
                         </td>
                         <td>
                             @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id })
-                            @Html.ActionLink("Выбрать", "Details", new { id = item.Id })
+                            @Html.ActionLink("Выбрать", "ReaderInfo", new { id = item.Id })
                             @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
                         </td>
                     </tr>
