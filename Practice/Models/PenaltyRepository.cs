@@ -16,5 +16,11 @@ namespace Practice.Models
         {
             return cont.PenaltySet.OrderBy(pn => pn.Id);
         }
+        public void PenaltyToZero(int id)
+        {
+            Penalty pn = cont.PenaltySet.Find(id);
+            pn.Sum = 0;
+            cont.SaveChanges();
+        }
     }
 }

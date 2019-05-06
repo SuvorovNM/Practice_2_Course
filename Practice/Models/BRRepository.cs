@@ -16,5 +16,18 @@ namespace Practice.Models
         {
             return cont.BookReturningSet.OrderBy(br => br.Real_Return_Date);
         }
+        public void Add(BookGiving BG, BookReturning BR)
+        {
+            Librarian curL = (from t in cont.PersonSet where BR.Librarian.Id == t.Id select t as Librarian).First();            
+            BG.BookReturning = new BookReturning();
+            BG.BookReturning.Librarian = curL;
+            Penalty pn = new Penalty();
+            pn.Info = BR.Penalty.Info;
+            pn.Sum = BR.Penalty.Sum;
+            BG.BookReturning.Penalty = pn;
+            BG.BookReturning.Real_Return_Date = BR.Real_Return_Date;
+            BG.Publication.Available = true;
+            cont.SaveChanges();
+        }
     }
 }

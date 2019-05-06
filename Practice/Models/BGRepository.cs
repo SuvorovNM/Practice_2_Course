@@ -33,5 +33,9 @@ namespace Practice.Models
             curP.Available = false;
             cont.SaveChanges();
         }
+        public BookGiving GetBookGiving(int id)
+        {
+            return cont.BookGivingSet.Find(id);
+        }
     }
 }

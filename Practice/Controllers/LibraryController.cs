@@ -64,6 +64,22 @@ namespace Practice.Controllers
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult BookReturn(int id)
+        {
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult BookReturn(int id, Penalty pn)
+        {
+            BookReturning BR = new BookReturning();
+            BR.Penalty = pn;
+            BR.Real_Return_Date = DateTime.Today;
+            BR.Librarian= (Librarian)Session["CurUsr"];
+            BookGiving bg = DM.BG.GetBookGiving(id);
+            DM.BR.Add(bg, BR);
+            return View();
+        }
         #region AddLib
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddLib()
@@ -187,6 +203,19 @@ namespace Practice.Controllers
             ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
             return View();
         }
+        public ActionResult BGInfo(int id)
+        {
+            ViewData.Model = DM.BG.GetBookGiving(id);
+            return View();
+        }
+        public ActionResult PayPenalty(int id)
+        {
+            BookGiving b = DM.BG.GetBookGiving(id);
+            int PenaltyID = b.BookReturning.Penalty.Id;
+            DM.Penalty.PenaltyToZero(PenaltyID);
+            return RedirectToAction("ReaderInfo/"+b.Reader.Id);
+        }
+        #region GiveBook
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GiveBook(int id)
         {
@@ -242,6 +271,7 @@ namespace Practice.Controllers
             ViewData["ERD"] = t.Substring(0, t.IndexOf('T'));
             return View();
         }
+        #endregion
         #region LibInfo
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult LibInfo(int id)

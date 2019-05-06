@@ -1,0 +1,138 @@
+﻿@model Practice.Models.BookGiving
+
+@{
+    ViewBag.Title = "BGInfo";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+    dl {
+        margin-bottom: 50px;
+    }
+
+        dl dt {
+            background: #f4ffef;
+            color: #000000;
+            float: left;
+            font-weight: bold;
+            margin-right: 10px;
+            padding: 5px;
+            width: 100px;
+        }
+
+        dl dd {
+            margin: 2px 0;
+            padding: 5px 0;
+        }
+</style>
+<body>
+    <div>
+        <div class="Mainpart" style="width:500px">
+            <h2 align="center"><b>Информация о выдаче</b></h2>
+            <hr />
+            <dl class="dl-horizontal" style="vertical-align:central">
+                <dt>
+                    @Html.DisplayName("ФИО читателя: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Reader.FIO)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("№ Читательского билета: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Reader.Library_Card)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("ФИО выдавшего библиотекаря: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Librarian.FIO)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Дата выдачи: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Give_Date)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Название книги: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publication.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Автор: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publication.Author)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Код книги: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publication.Id)
+                </dd>
+                <dt>
+                    @Html.DisplayName("Ожидаемая дата возврата: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Expected_Return_Date)
+                </dd>
+                @if (Model.BookReturning != null)
+                {
+                    <dt>
+                        @Html.DisplayName("Реальная дата возврата: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.BookReturning.Real_Return_Date)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("ФИО принявшего библиотекаря: ")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.BookReturning.Librarian.FIO)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Сумма штрафа: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.BookReturning.Penalty.Sum)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Информация о штрафе: ")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.BookReturning.Penalty.Info)
+                    </dd>
+                }
+
+            </dl>
+            <a href=@("/Library/ReaderInfo/"+Model.Reader.Id)><input type="submit" class="button" value="Назад" /></a>
+        </div>
+    </div>
+</body>

@@ -312,6 +312,8 @@
     <Content Include="Views\Library\AddLib.cshtml" />
     <Content Include="Views\Library\ReaderInfo.cshtml" />
     <Content Include="Views\Library\GiveBook.cshtml" />
+    <Content Include="Views\Library\BookReturn.cshtml" />
+    <Content Include="Views\Library\BGInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
