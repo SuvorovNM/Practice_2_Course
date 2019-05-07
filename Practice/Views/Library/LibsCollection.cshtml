@@ -74,15 +74,20 @@
                         @Html.DisplayFor(modelItem => item.Hiring_Date)
                     </td>
                     <td>
-                        @Html.ActionLink("Подробнее", "LibInfo", new { id = item.Id })
+                        <nobr>
+                            <a style="text-decoration:none;" href=@("LibInfo/"+item.Id)><i class="fa fa-id-card-o " aria-hidden="true"></i> Подробнее</a>
+                        </nobr>
                         @if (item.Privilege == 0)
                         {
-                            @Html.ActionLink("Изменить", "LibChange", new { id = item.Id })
-                            @Html.ActionLink("Удалить", "DeleteLib", new { id = item.Id })
+                            <br />
+                            <a style="text-decoration:none;" href=@("LibChange/"+item.Id)><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить</a>
+                            <br />
+                            <a style="text-decoration:none;" href=@("DeleteLib/"+item.Id)><i class="fa fa-times " aria-hidden="true"></i> Удалить</a>
                         }
                         @if ((((Librarian)Session["CurUsr"]).Id == item.Id))
                         {
-                            @Html.ActionLink("Изменить", "LibChange", new { id = item.Id })
+                            <br />
+                            <a style="text-decoration:none;" href=@("LibChange/"+item.Id)><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить</a>
                         }
                     </td>
                 </tr>

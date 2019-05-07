@@ -14,6 +14,15 @@
         background-size: cover;
     }
 </style>
+<script>
+    function disp(form) {
+        if (form.style.display == "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
 
 @using (Html.BeginForm())
 {
@@ -79,7 +88,89 @@
                             @Html.DisplayFor(model => ViewData["Penalty"])
                         </dd>
                     </dl>
-                    <a href="/Library/GiveBook/@Model.Id"><input type="submit" class="button" value="Выдать книгу" style="float:right" /></a>
+                    <form method="post" action="">
+                        <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
+                        <br />
+                        <br />
+                        <table id="Filters" style="display:none">
+                            <tr><td></td></tr>
+
+                            <tr>
+                                <td>
+                                    <div class="_bottom">
+                                        <input type="checkbox" id="CB_LC" class="css-checkbox" name="CB_Book_ID" value="true" /> Код книги:
+                                    </div>
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr><td><input type="number" name="Book_ID" class="form-control" placeholder="Номер Чит. Билета" /></td></tr>
+                            <tr>
+                                <td>
+                                    <div class="_bottom">
+                                        <input type="checkbox" class="css-checkbox" name="CB_Return" value="true" /> Книга возвращена:
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <select id="Select1" class="form-control" name="IsReturned">
+                                            <option>Возвращена</option>
+                                            <option>Не возвращена</option>
+                                        </select>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="_bottom">
+                                        <input type="checkbox" class="css-checkbox" name="CB_Penalty" value="true" /> Штраф наложен:
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <select id="Select2" class="form-control" name="IsPenalty">
+                                            <option>Да</option>
+                                            <option>Нет</option>
+                                        </select>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="_bottom">
+                                        <input type="checkbox" class="css-checkbox" name="CB_Give_Date" value="true" /> Дата выдачи:
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr><td><p><input type="date" name="Give_Date" class="form-control" value="1970-01-01"/></p></td></tr>
+                            <tr>
+                                <td>
+                                    <div class="_bottom">
+                                        <input type="checkbox" class="css-checkbox" name="CB_Exp_Return" value="true" /> Выдано до:
+                                    </div>
+                                </td>
+
+                                <td></td>
+                            </tr>
+                            <tr><td><p><input type="date" name="Exp_Return" class="form-control" value="1970-01-01"/></p></td></tr>
+                            <tr>
+                                <td><input type="submit" class="button" value="Поиск" style="margin-bottom:10px"/></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <a href=@("/Library/ReaderInfo/"+Model.Id)><input type="button" class="button" value="Сброс" /></a>
+
+                    <a href=@("/Library/GiveBook/"+Model.Id)><input type="button" class="button" value="Выдать книгу" style="float:right" /></a>
                     <br />
                     <br />
                     <table class="table">
@@ -109,61 +200,67 @@
                         </tr>
                         @foreach (BookGiving item in (IEnumerable<BookGiving>)ViewData["BG"])
                         {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Give_Date)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Publication.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Publication.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Publication.Author)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Expected_Return_Date)
-                            </td>
-                            @if (item.BookReturning != null)
-                            {
+                            <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.BookReturning.Real_Return_Date)
+                                    @Html.DisplayFor(modelItem => item.Give_Date)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.BookReturning.Penalty.Sum)
+                                    @Html.DisplayFor(modelItem => item.Publication.Id)
                                 </td>
-                            }
-                            else
-                            {
-                                if (item.Expected_Return_Date > DateTime.Today)
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Publication.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Publication.Author)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Expected_Return_Date)
+                                </td>
+                                @if (item.BookReturning != null)
                                 {
-                                    <td style="color:orange">
-                                        @Html.DisplayName("Не принята")
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BookReturning.Real_Return_Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BookReturning.Penalty.Sum)
                                     </td>
                                 }
                                 else
                                 {
-                                    <td style="color:orangered">
-                                        <b>@Html.DisplayName("Не принята")</b>
+                                    if (item.Expected_Return_Date > DateTime.Today)
+                                    {
+                                        <td style="color:orange">
+                                            @Html.DisplayName("Не принята")
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color:orangered">
+                                            <b>@Html.DisplayName("Не принята")</b>
+                                        </td>
+                                    }
+                                    <td>
+                                        @Html.DisplayName("")
                                     </td>
                                 }
-                                <td>
-                                    @Html.DisplayName("")
-                                </td>
-                            }
-                            <td>
-                                @if (item.BookReturning == null)
-                                {
-                                    @Html.ActionLink("Принять книгу", "BookReturn", new { id = item.Id })
-                                }
-                                @Html.ActionLink("Подробная информация", "BGInfo", new { id = item.Id })
-                                @if (item.BookReturning != null && item.BookReturning.Penalty != null && item.BookReturning.Penalty.Sum > 0)
-                                {
-                                    @Html.ActionLink("Погасить", "PayPenalty", new { id = item.Id }, htmlAttributes: new { @type = "submit" })
-                                }
-                            </td>
-                        </tr>
+                                    <td>
+                                        @if (item.BookReturning == null)
+                                        {
+                                            <nobr>
+                                                <a style="text-decoration:none;" href=@("/Library/BookReturn/"+item.Id)><i class="fa fa-check " aria-hidden="true"></i> Принять книгу</a>
+                                            </nobr>
+                                            <br />
+                                        }
+                                        <nobr>
+                                            <a style="text-decoration:none;" href=@("/Library/BGInfo/"+item.Id)><i class="fa fa-search " aria-hidden="true"></i> Подробнее</a>
+                                        </nobr>
+                                        @if (item.BookReturning != null && item.BookReturning.Penalty != null && item.BookReturning.Penalty.Sum > 0)
+                                        {
+                                            <br />
+                                            <a style="text-decoration:none;" href=@("/Library/PayPenalty/"+item.Id)><i class="fa fa-money " aria-hidden="true" typeof="submit"></i> Погасить</a>
+                                        }
+                                    </td>
+                            </tr>
                         }
                     </table>
                 </div>

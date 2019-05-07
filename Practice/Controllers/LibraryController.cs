@@ -37,6 +37,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReadersCollection(Reader gotten, bool CB_Library_Card = false, bool CB_FIO = false, bool CB_Birth = false, bool CB_Phone = false, bool CB_Reg = false)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             int LT = gotten.Library_Card;
             //IEnumerable<Reader> readers = (from t in DM.Rd.readers() where t.Library_Card == LT select t);
             IEnumerable<Reader> readers = DM.Rd.readers();
@@ -55,40 +59,83 @@ namespace Practice.Controllers
         }
         public ActionResult ReadersSearch(int tmp)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             ViewData["Readers"] = DM.Rd.readers();
             return View();
         }
         #endregion
         public ActionResult LibsCollection()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege==0)
+                {
+                    Response.Redirect("ReadersCollection");
+                }
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
+        #region BookReturn
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult BookReturn(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult BookReturn(int id, Penalty pn)
+        public ActionResult BookReturn(int id, Penalty pn, int SumP, int SumK)
         {
+            pn.Sum = SumP+(decimal)SumK/100;
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             BookReturning BR = new BookReturning();
+            if (pn.Info == null)
+            {
+                pn.Info = "";
+            }
             BR.Penalty = pn;
             BR.Real_Return_Date = DateTime.Today;
             BR.Librarian= (Librarian)Session["CurUsr"];
             BookGiving bg = DM.BG.GetBookGiving(id);
             DM.BR.Add(bg, BR);
-            return View();
+            return RedirectToAction("ReaderInfo/" + bg.Reader.Id);
         }
+        #endregion
         #region AddLib
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddLib()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddLib(Librarian t)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             if (string.IsNullOrWhiteSpace(t.FIO))
                 ModelState.AddModelError("FIO", "Укажите имя!");
             if (string.IsNullOrWhiteSpace(t.Phone_Number) || t.Phone_Number.Length < 11)
@@ -133,6 +180,14 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult LibChange(int id = -1)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             if (id == -1)
             {
                 id = (int)Session["LibID"];
@@ -149,6 +204,14 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult LibChange(int id, Librarian t)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             Librarian lib = DM.Lib.GetLibrarian(id);
             ViewData["Lib"] = lib;
             ViewData.Model = lib;
@@ -196,6 +259,11 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ReaderInfo(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            Session["ReaderID"] = id;
             Reader rd = DM.Rd.GetReader(id);
             ViewData["Reader"] = rd;
             ViewData.Model = rd;
@@ -203,13 +271,67 @@ namespace Practice.Controllers
             ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
             return View();
         }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ReaderInfo(int id, DateTime Give_Date, DateTime Exp_Return, bool CB_Book_ID=false, bool CB_Return=false, bool CB_Penalty=false, bool CB_Give_Date=false,
+            bool CB_Exp_Return=false, int Book_ID=0, string IsReturned="", string IsPenalty="")
+        {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            Reader rd = DM.Rd.GetReader(id);
+            ViewData["Reader"] = rd;
+            ViewData.Model = rd;
+            ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
+            IEnumerable<BookGiving> bg = DM.BG.bookGivings(rd);
+            if (CB_Book_ID)
+            {
+                bg = bg.Intersect(from t in DM.BG.bookGivings() where t.Publication.Id == Book_ID select t);
+            }
+            if (CB_Return)
+            {
+                if (IsReturned=="Возвращена")
+                    bg = bg.Intersect(from t in DM.BG.bookGivings() where t.BookReturning != null select t);
+                else
+                {
+                    bg = bg.Intersect(from t in DM.BG.bookGivings() where t.BookReturning == null select t);
+                }
+            }
+            if (CB_Penalty)
+            {
+                if (IsPenalty == "Да")
+                    bg = bg.Intersect(from t in DM.BG.bookGivings() where t.BookReturning != null && t.BookReturning.Penalty != null && t.BookReturning.Penalty.Sum > 0 select t);
+                else
+                {
+                    bg = bg.Intersect(from t in DM.BG.bookGivings() where (t.BookReturning != null && t.BookReturning.Penalty != null && t.BookReturning.Penalty.Sum == 0)|| t.BookReturning==null select t);
+                }
+            }
+            if (CB_Give_Date && Give_Date!=null)
+            {
+                bg = bg.Intersect(from t in DM.BG.bookGivings() where t.Give_Date == Give_Date select t);
+            }
+            if (CB_Exp_Return && Exp_Return != null)
+            {
+                bg = bg.Intersect(from t in DM.BG.bookGivings() where t.Expected_Return_Date == Exp_Return select t);
+            }
+            ViewData["BG"] = bg;
+            return View();
+        }
         public ActionResult BGInfo(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             ViewData.Model = DM.BG.GetBookGiving(id);
             return View();
         }
         public ActionResult PayPenalty(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             BookGiving b = DM.BG.GetBookGiving(id);
             int PenaltyID = b.BookReturning.Penalty.Id;
             DM.Penalty.PenaltyToZero(PenaltyID);
@@ -219,6 +341,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GiveBook(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Reader rd = DM.Rd.GetReader(id);
             BookGiving bg = new BookGiving();
             bg.Reader = rd;
@@ -236,6 +362,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult GiveBook(int id, BookGiving bg, int BookID = 0)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Publication p = null;
             bool OK = false;
             try
@@ -276,6 +406,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult LibInfo(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Librarian lib = DM.Lib.GetLibrarian(id);
             ViewData["Lib"] = lib;
             ViewData.Model = lib;
@@ -284,6 +418,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult LibInfo(int id, Librarian Clib)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             //RedirectToAction("LibChange", id);
             Session["LibID"] = id;
             return RedirectToAction("LibChange", id);
@@ -291,6 +429,10 @@ namespace Practice.Controllers
         #endregion
         public ActionResult PubsCollection()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             ViewData["Pubs"] = DM.Pub.publishers();
             return View();
         }
@@ -298,6 +440,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ChangePub(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Publisher p = DM.Pub.GetPublisher(id);
             ViewData.Model = p;
             return View();
@@ -305,6 +451,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangePub(int id, Publisher p)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             if (string.IsNullOrWhiteSpace(p.Name))
                 ModelState.AddModelError("Name", "Укажите название издательства!");
             if (string.IsNullOrWhiteSpace(p.City))
@@ -328,11 +478,19 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddPub()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPub(Publisher p)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             if (string.IsNullOrWhiteSpace(p.Name))
                 ModelState.AddModelError("Name", "Укажите название издательства!");
             if (string.IsNullOrWhiteSpace(p.City))
@@ -356,6 +514,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult BooksCollection()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Librarian CurLib = (Librarian)Session["CurUsr"];
             if (CurLib != null)
             {
@@ -367,6 +529,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult BooksCollection(Publication gotten, bool CB_Id = false, bool CB_Name = false, bool CB_Author = false, bool CB_BBK = false, bool CB_Pub = false, bool CB_Avail = false, string AvailableT = "")
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             IEnumerable<Publication> pubs = DM.Book.publications();
             if (CB_Id)
             {
@@ -402,6 +568,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddBook()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             var info = DM.Pub.publishers()
                 .Select(s => new
                 {
@@ -414,6 +584,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddBook(Publication p, int Publishers)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             if (string.IsNullOrWhiteSpace(p.Name))
                 ModelState.AddModelError("Name", "Укажите название книги!");
             if (string.IsNullOrWhiteSpace(p.Author))
@@ -465,6 +639,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ChangeReader(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Reader rd = DM.Rd.GetReader(id);
             //rd.Birthday=rd.Birthday.ToS
             ViewData.Model = rd;
@@ -473,6 +651,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeReader(int id, Reader rd)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             if (string.IsNullOrWhiteSpace(rd.FIO))
                 ModelState.AddModelError("FIO", "Укажите имя!");
             if (string.IsNullOrWhiteSpace(rd.Phone_Number) || rd.Phone_Number.Length < 11)
@@ -503,6 +685,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ChangeBook(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Publication p = DM.Book.GetPublication(id);
             ViewData["Avail"] = p.Available;
             ViewData.Model = p;
@@ -519,6 +705,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeBook(int id, Publication p, int Publishers, string AvailableT)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Publisher pub = DM.Pub.GetPublisher(Publishers);
             bool Avail = false;
             Avail = AvailableT == "Есть в наличии";
@@ -576,6 +766,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddReader(Reader t)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             if (string.IsNullOrWhiteSpace(t.FIO))
                 ModelState.AddModelError("FIO", "Укажите имя!");
             if (string.IsNullOrWhiteSpace(t.Phone_Number) || t.Phone_Number.Length < 11)
@@ -611,6 +805,10 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult AddReader()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             Reader t = new Reader();
             t.Birthday = new DateTime(1900, 01, 01);
             return View();
@@ -618,16 +816,32 @@ namespace Practice.Controllers
         #endregion
         public ActionResult DeleteReader(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             DM.Rd.DeleteReader(id);
             return RedirectToAction("ReadersCollection");
         }
         public ActionResult DeleteBook(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
             DM.Book.Delete(id);
             return RedirectToAction("BooksCollection");
         }
         public ActionResult DeleteLib(int id)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             DM.Lib.Delete(id);
             return RedirectToAction("LibsCollection");
         }

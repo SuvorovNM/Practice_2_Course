@@ -46,9 +46,13 @@
                     <td align="center">
                         @Html.DisplayFor(modelItem => item.Publication.Count)
                     </td>
-                    <td  align="right">
-                        @Html.ActionLink("Изменить", "ChangePub", new { id = item.Id })
-                        @Html.ActionLink("Подробнее", "Details", new { id = item.Id })
+                    <td align="right">
+                        <nobr>
+                            <a style="text-decoration:none;" href=@("ChangePub/"+item.Id)><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить</a>
+                        </nobr>
+                        <br />
+                        <a style="text-decoration:none;" href=@("PubInfo/"+item.Id)><i class="fa fa-id-card-o " aria-hidden="true"></i> Подробнее</a>
+                        <br />
                     </td>
                 </tr>
             }

@@ -1,3 +1,1 @@
-<a href="/Library/LibInfo/@(((Librarian)Session["CurUsr"]).Id)"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a>
-
-fa fa-sign-out
+@Html.EditorFor(model => model.Sum, new { htmlAttributes = new { @class = "form-control" } })

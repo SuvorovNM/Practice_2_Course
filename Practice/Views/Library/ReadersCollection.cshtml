@@ -23,7 +23,7 @@
     }
 </script>
 <body>
-    <div class="Mainpart">
+    <div class="Mainpart" style="width:1100px">
         <h2 align="center"><b>Список читателей</b></h2>
         <form method="post" action="">
             <input type="button" class="button" value="Использовать фильтр" onclick="disp(document.getElementById('Filters'))" />
@@ -136,9 +136,13 @@
                             @Html.DisplayFor(modelItem => item.Registration_Date)
                         </td>
                         <td>
-                            @Html.ActionLink("Изменить", "ChangeReader", new { id = item.Id })
-                            @Html.ActionLink("Выбрать", "ReaderInfo", new { id = item.Id })
-                            @Html.ActionLink("Удалить", "DeleteReader", new { id = item.Id })
+                            <nobr>
+                                <a style="text-decoration:none;" href=@("ChangeReader/"+item.Id)><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить</a>
+                            </nobr>
+                            <br />
+                            <a style="text-decoration:none;" href=@("ReaderInfo/"+item.Id)><i class="fa fa-id-card-o " aria-hidden="true"></i> Выбрать</a>
+                            <br />
+                            <a style="text-decoration:none;" href=@("DeleteReader/"+item.Id)><i class="fa fa-times " aria-hidden="true"></i> Удалить</a>
                         </td>
                     </tr>
                 }

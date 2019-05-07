@@ -144,43 +144,49 @@
 
             @foreach (Publication item in (IEnumerable<Publication>)ViewData["Books"])
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BBK)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Available)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Page_Count)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Release_Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @Html.ActionLink("Изменить", "ChangeBook", new { id = item.Id }) |
-                    @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Удалить", "DeleteBook", new { id = item.Id })
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BBK)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Available)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Page_Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Release_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        <nobr>
+                            <a style="text-decoration:none;" href=@("ChangeBook/"+item.Id)><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить</a>
+                        </nobr>
+                        <br />
+                        <nobr>
+                            <a style="text-decoration:none;" href=@("BookInfo/"+item.Id)><i class="fa fa-book" aria-hidden="true"></i> Подробнее</a>
+                        </nobr>
+                        <br />
+                        <a style="text-decoration:none;" href=@("DeleteBook/"+item.Id)><i class="fa fa-times " aria-hidden="true"></i> Удалить</a>
+                    </td>
+                </tr>
             }
         </table>
     </div>
