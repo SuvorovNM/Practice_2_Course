@@ -18,52 +18,55 @@
 <body>
     <div class="Mainpart">
         <h2 align="center"><b>Список должников: </b></h2>
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayName("ФИО")
-                </th>
-                <th>
-                    @Html.DisplayName("Телефон")
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayName("Читательский билет")
-                </th>
-                <th>
-                    @Html.DisplayName("Дата регистрации")
-                </th>
-                <th>
-                    @Html.DisplayName("Кол-во просроченных книг")
-                </th>
-            </tr>
+        <a href="/Library/Debtors_Download">
+            <input type="button" value="Скачать" class="button" style="float:right; margin-right:20px; margin-bottom:10px" />
+            </a>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("ФИО")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Телефон")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayName("Читательский билет")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Дата регистрации")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Кол-во просроченных книг")
+                    </th>
+                </tr>
 
-            @foreach (NamePlusCountBooks item in (IEnumerable<NamePlusCountBooks>)ViewData["Debtors"])
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FIO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phone_Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Library_Card)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Registration_Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Count)
-                </td>
-            </tr>
-            }
+                @foreach (NamePlusCountBooks item in (IEnumerable<NamePlusCountBooks>)ViewData["Debtors"])
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FIO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone_Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Library_Card)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Registration_Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                    </tr>
+                }
 
-        </table>
-    </div>
+            </table>
+</div>
 </body>

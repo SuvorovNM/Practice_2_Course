@@ -26,6 +26,9 @@
             <input type="number" name="max" required min="0" class="form-control" placeholder="Минимальное значение" />
             <input type="submit" class="button" value="Поиск" style="margin-bottom:10px; margin-top:10px" />
         </form>
+        <a href="/Library/CountBooks_Download">
+            <input type="button" value="Скачать" class="button" style="float:right; margin-right:20px; margin-bottom:10px" />
+        </a>
         <table class="table">
             <tr>
                 <th>
@@ -50,28 +53,28 @@
             </tr>
             @foreach (NamePlusCountBooks item in (IEnumerable<NamePlusCountBooks>)ViewData["AllCounts"])
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FIO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phone_Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Library_Card)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Registration_Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Count)
-                </td>
-            </tr>
-             }
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Library_Card)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Registration_Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                </tr>
+            }
 
-            </table>
+        </table>
     </div>
 </body>
