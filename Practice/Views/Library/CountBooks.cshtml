@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Practice.Models.Reader>
+@using Practice.Models
+@{
+    ViewBag.Title = "CountBooks";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Количество книг, взятых читателями за все время: </b></h2>
+        <hr />
+        <form method="post" action="">
+            Минимальное количество книг:
+            <input type="number" name="min" required min="0" class="form-control" placeholder="Минимальное значение" />
+            Максимальное количество книг:
+            <input type="number" name="max" required min="0" class="form-control" placeholder="Минимальное значение" />
+            <input type="submit" class="button" value="Поиск" style="margin-bottom:10px; margin-top:10px" />
+        </form>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("ФИО")
+                </th>
+                <th>
+                    @Html.DisplayName("Телефон")
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayName("Читательский билет")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата регистрации")
+                </th>
+                <th>
+                    @Html.DisplayName("Количество книг")
+                </th>
+                <th></th>
+            </tr>
+            @foreach (NamePlusCountBooks item in (IEnumerable<NamePlusCountBooks>)ViewData["AllCounts"])
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FIO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone_Number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Library_Card)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Registration_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+            </tr>
+             }
+
+            </table>
+    </div>
+</body>

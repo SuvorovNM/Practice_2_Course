@@ -30,18 +30,21 @@ namespace Practice.Models
         public void Edit(int id, Librarian lib)
         {
             Librarian Old = GetLibrarian(id);
-            Old.FIO = lib.FIO;
-            Old.Birthday = lib.Birthday;
-            Old.Phone_Number = lib.Phone_Number;
-            Old.Email = lib.Email;
-            Old.Hiring_Date = lib.Hiring_Date;
-            Old.Password = lib.Password;
-            Old.Address.Region = lib.Address.Region;
-            Old.Address.City = lib.Address.City;
-            Old.Address.Street = lib.Address.Street;
-            Old.Address.House = lib.Address.House;
-            Old.Address.Flat = lib.Address.Flat;
-            cont.SaveChanges();
+            if (Old != null)
+            {
+                Old.FIO = lib.FIO;
+                Old.Birthday = lib.Birthday;
+                Old.Phone_Number = lib.Phone_Number;
+                Old.Email = lib.Email;
+                Old.Hiring_Date = lib.Hiring_Date;
+                Old.Password = lib.Password;
+                Old.Address.Region = lib.Address.Region;
+                Old.Address.City = lib.Address.City;
+                Old.Address.Street = lib.Address.Street;
+                Old.Address.House = lib.Address.House;
+                Old.Address.Flat = lib.Address.Flat;
+                cont.SaveChanges();
+            }
         }
         public void Add(Librarian lib)
         {

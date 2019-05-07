@@ -1,0 +1,136 @@
+﻿@model Practice.Models.Publisher
+@using Practice.Models
+@{
+    ViewBag.Title = "PubInfo";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+<style>
+    dl {
+        margin-bottom: 50px;
+    }
+
+        dl dt {
+            background: #f4ffef;
+            color: #000000;
+            float: left;
+            font-weight: bold;
+            margin-right: 10px;
+            padding: 5px;
+            width: 100px;
+        }
+
+        dl dd {
+            margin: 2px 0;
+            padding: 5px 0;
+        }
+</style>
+<body>
+    <div class="Mainpart">
+        <div>
+            <h2 align="center"><b>Информация об издательстве</b></h2>
+            <hr />
+            <dl class="dl-horizontal" style="margin-bottom:10px">
+                <dt>
+                    @Html.DisplayName("Название: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Город: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Количество книг: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publication.Count)
+                </dd>
+            </dl>
+            <a href="/Library/PubsCollection"><input type="button" class="button" value="Назад"/></a>
+            <h2 align="center"><b>Список книг: </b></h2>
+            <hr />
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Код")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Название")
+                    </th>
+                    <th>
+                        @Html.DisplayName("ББК")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Автор")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Наличие")
+                    </th>
+                    <th>
+                        @Html.DisplayName("ISBN/ISSN")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Страницы ")
+                    </th>
+                    <th>
+                        @Html.DisplayName("№ выпуска/тома")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Год выпуска")
+                    </th>
+                </tr>
+
+                @foreach (Publication item in (IEnumerable<Publication>)ViewData["Books"])
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BBK)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Author)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Available)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ISBN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Page_Count)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Release_Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Year)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</body>

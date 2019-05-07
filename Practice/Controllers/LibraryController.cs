@@ -21,6 +21,32 @@ namespace Practice.Controllers
         {
             DM = _DM;
         }
+        public ActionResult Debtors()
+        {
+            ViewData.Model = (from t in DM.Rd.readers() let countB= (from p in DM.BG.bookGivings() where (p.Reader.Id == t.Id && p.BookReturning == null && p.Expected_Return_Date < DateTime.Today) select p).Count() where countB > 0 select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, t.Registration_Date, countB)).ToList();
+            ViewData["Debtors"] = ViewData.Model;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult CountBooks()
+        {
+            ViewData["People"] = DM.Rd.readers().ToList();
+            ViewData["Counts"] = (from t in DM.Rd.readers() select t.BookGiving.Count).ToList();
+            var values = (from t in DM.Rd.readers() select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, t.Registration_Date, t.BookGiving.Count)).ToList().OrderBy(p=>p.Count).Reverse();
+            ViewData["AllCounts"] = values;
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CountBooks(int min, int max)
+        {
+            ViewData["People"] = DM.Rd.readers().ToList();
+            ViewData["Counts"] = (from t in DM.Rd.readers() select t.BookGiving.Count).ToList();
+            
+            var values = (from t in DM.Rd.readers() where t.BookGiving.Count>=min && t.BookGiving.Count<=max select new NamePlusCountBooks( t.FIO,t.Library_Card,t.Phone_Number,t.Email,t.Registration_Date, t.BookGiving.Count)).ToList();
+            ViewData["AllCounts"] = values;
+            //(IEnumerable<>)ViewData["All"]
+            return View();
+        }
         #region ReadersCollection
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ReadersCollection()
@@ -73,10 +99,10 @@ namespace Practice.Controllers
             {
                 Response.Redirect("SignIn");
             }
-            else if (((Librarian)Session["CurUsr"]).Privilege==0)
-                {
-                    Response.Redirect("ReadersCollection");
-                }
+            else if (((Librarian)Session["CurUsr"]).Privilege == 0)
+            {
+                Response.Redirect("ReadersCollection");
+            }
             ViewData["Librarians"] = DM.Lib.librarians();
             return View();
         }
@@ -93,7 +119,7 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult BookReturn(int id, Penalty pn, int SumP, int SumK)
         {
-            pn.Sum = SumP+(decimal)SumK/100;
+            pn.Sum = SumP + (decimal)SumK / 100;
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
@@ -105,8 +131,12 @@ namespace Practice.Controllers
             }
             BR.Penalty = pn;
             BR.Real_Return_Date = DateTime.Today;
-            BR.Librarian= (Librarian)Session["CurUsr"];
+            BR.Librarian = (Librarian)Session["CurUsr"];
             BookGiving bg = DM.BG.GetBookGiving(id);
+            if (bg == null)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             DM.BR.Add(bg, BR);
             return RedirectToAction("ReaderInfo/" + bg.Reader.Id);
         }
@@ -193,6 +223,10 @@ namespace Practice.Controllers
                 id = (int)Session["LibID"];
             }
             Librarian lib = DM.Lib.GetLibrarian(id);
+            if (lib == null)
+            {
+                Response.Redirect("~/Library/LibsCollection");
+            }
             ViewData["Lib"] = lib;
             ViewData.Model = lib;
             string t1 = lib.Birthday.Date.ToString("s");
@@ -213,6 +247,10 @@ namespace Practice.Controllers
                 Response.Redirect("~/Library/ReadersCollection");
             }
             Librarian lib = DM.Lib.GetLibrarian(id);
+            if (lib == null)
+            {
+                Response.Redirect("~/Library/LibsCollection");
+            }
             ViewData["Lib"] = lib;
             ViewData.Model = lib;
             string t1 = lib.Birthday.Date.ToString("s");
@@ -256,30 +294,47 @@ namespace Practice.Controllers
             else return View();
         }
         #endregion
+        #region ReaderInfo
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ReaderInfo(int id)
+        public ActionResult ReaderInfo(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
+            }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
             }
             Session["ReaderID"] = id;
             Reader rd = DM.Rd.GetReader(id);
-            ViewData["Reader"] = rd;
-            ViewData.Model = rd;
-            ViewData["BG"] = DM.BG.bookGivings(rd);
-            ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
+            if (rd != null)
+            {
+                ViewData["Reader"] = rd;
+                ViewData.Model = rd;
+                ViewData["BG"] = DM.BG.bookGivings(rd);
+                ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
+            }
+            else
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             return View();
+
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ReaderInfo(int id, DateTime Give_Date, DateTime Exp_Return, bool CB_Book_ID=false, bool CB_Return=false, bool CB_Penalty=false, bool CB_Give_Date=false,
-            bool CB_Exp_Return=false, int Book_ID=0, string IsReturned="", string IsPenalty="")
+        public ActionResult ReaderInfo(int id, DateTime Give_Date, DateTime Exp_Return, bool CB_Book_ID = false, bool CB_Return = false, bool CB_Penalty = false, bool CB_Give_Date = false,
+            bool CB_Exp_Return = false, int Book_ID = 0, string IsReturned = "", string IsPenalty = "")
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
             Reader rd = DM.Rd.GetReader(id);
+            if (rd == null)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             ViewData["Reader"] = rd;
             ViewData.Model = rd;
             ViewData["Penalty"] = DM.Rd.GetPenalty(rd);
@@ -290,7 +345,7 @@ namespace Practice.Controllers
             }
             if (CB_Return)
             {
-                if (IsReturned=="Возвращена")
+                if (IsReturned == "Возвращена")
                     bg = bg.Intersect(from t in DM.BG.bookGivings() where t.BookReturning != null select t);
                 else
                 {
@@ -303,10 +358,10 @@ namespace Practice.Controllers
                     bg = bg.Intersect(from t in DM.BG.bookGivings() where t.BookReturning != null && t.BookReturning.Penalty != null && t.BookReturning.Penalty.Sum > 0 select t);
                 else
                 {
-                    bg = bg.Intersect(from t in DM.BG.bookGivings() where (t.BookReturning != null && t.BookReturning.Penalty != null && t.BookReturning.Penalty.Sum == 0)|| t.BookReturning==null select t);
+                    bg = bg.Intersect(from t in DM.BG.bookGivings() where (t.BookReturning != null && t.BookReturning.Penalty != null && t.BookReturning.Penalty.Sum == 0) || t.BookReturning == null select t);
                 }
             }
-            if (CB_Give_Date && Give_Date!=null)
+            if (CB_Give_Date && Give_Date != null)
             {
                 bg = bg.Intersect(from t in DM.BG.bookGivings() where t.Give_Date == Give_Date select t);
             }
@@ -317,35 +372,90 @@ namespace Practice.Controllers
             ViewData["BG"] = bg;
             return View();
         }
-        public ActionResult BGInfo(int id)
+        #endregion
+        public ActionResult BGInfo(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
+            }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
             }
             ViewData.Model = DM.BG.GetBookGiving(id);
             return View();
         }
-        public ActionResult PayPenalty(int id)
+        public ActionResult PayPenalty(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             BookGiving b = DM.BG.GetBookGiving(id);
-            int PenaltyID = b.BookReturning.Penalty.Id;
-            DM.Penalty.PenaltyToZero(PenaltyID);
-            return RedirectToAction("ReaderInfo/"+b.Reader.Id);
+            if (b != null && b.BookReturning != null && b.BookReturning.Penalty != null)
+            {
+                int PenaltyID = b.BookReturning.Penalty.Id;
+                DM.Penalty.PenaltyToZero(PenaltyID);
+            }
+            return RedirectToAction("ReaderInfo/" + b.Reader.Id);
+        }
+        public ActionResult PubInfo(int id = 0)
+        {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/PubsCollection");
+            }
+            ViewData.Model = DM.Pub.GetPublisher(id);
+            if (ViewData.Model == null)
+            {
+                Response.Redirect("~/Library/PubsCollection");
+            }
+            ViewData["Books"] = (from t in DM.Book.publications() where t.Publisher.Id == id select t).ToList();
+            return View();
+        }
+        public ActionResult BookInfo(int id = 0)
+        {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("~/Library/SignIn");
+            }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
+            ViewData.Model = DM.Book.GetPublication(id);
+            if (ViewData.Model == null)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
+            return View();
         }
         #region GiveBook
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GiveBook(int id)
+        public ActionResult GiveBook(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             Reader rd = DM.Rd.GetReader(id);
+            if (rd == null)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             BookGiving bg = new BookGiving();
             bg.Reader = rd;
             bg.Librarian = (Librarian)Session["CurUsr"];
@@ -383,6 +493,10 @@ namespace Practice.Controllers
                 }
             }
             Reader rd = DM.Rd.GetReader(id);
+            if (rd == null)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             bg.Reader = rd;
             bg.Librarian = (Librarian)Session["CurUsr"];
             bg.Give_Date = DateTime.Today;
@@ -404,13 +518,21 @@ namespace Practice.Controllers
         #endregion
         #region LibInfo
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult LibInfo(int id)
+        public ActionResult LibInfo(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/LibsCollection");
+            }
             Librarian lib = DM.Lib.GetLibrarian(id);
+            if (lib == null)
+            {
+                Response.Redirect("~/Library/LibsCollection");
+            }
             ViewData["Lib"] = lib;
             ViewData.Model = lib;
             return View();
@@ -438,13 +560,21 @@ namespace Practice.Controllers
         }
         #region ChangePub
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ChangePub(int id)
+        public ActionResult ChangePub(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/PubsCollection");
+            }
             Publisher p = DM.Pub.GetPublisher(id);
+            if (p == null)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
             ViewData.Model = p;
             return View();
         }
@@ -637,13 +767,21 @@ namespace Practice.Controllers
         #endregion
         #region ChangeReader
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ChangeReader(int id)
+        public ActionResult ChangeReader(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             Reader rd = DM.Rd.GetReader(id);
+            if (rd == null)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
             //rd.Birthday=rd.Birthday.ToS
             ViewData.Model = rd;
             return View();
@@ -683,13 +821,21 @@ namespace Practice.Controllers
         #endregion
         #region ChangeBook
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ChangeBook(int id)
+        public ActionResult ChangeBook(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
             Publication p = DM.Book.GetPublication(id);
+            if (p == null)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
             ViewData["Avail"] = p.Available;
             ViewData.Model = p;
             var info = DM.Pub.publishers()
@@ -710,6 +856,10 @@ namespace Practice.Controllers
                 Response.Redirect("~/Library/SignIn");
             }
             Publisher pub = DM.Pub.GetPublisher(Publishers);
+            if (pub == null)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
             bool Avail = false;
             Avail = AvailableT == "Есть в наличии";
             if (string.IsNullOrWhiteSpace(p.Name))
@@ -814,37 +964,63 @@ namespace Practice.Controllers
             return View();
         }
         #endregion
-        public ActionResult DeleteReader(int id)
+        #region deleteEntities
+        public ActionResult DeleteReader(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
-            DM.Rd.DeleteReader(id);
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/ReadersCollection");
+            }
+            try
+            {
+                DM.Rd.DeleteReader(id);
+            }
+            catch { }
             return RedirectToAction("ReadersCollection");
         }
-        public ActionResult DeleteBook(int id)
+        public ActionResult DeleteBook(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
             }
-            DM.Book.Delete(id);
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/BooksCollection");
+            }
+            try
+            {
+                DM.Book.Delete(id);
+            }
+            catch { }
             return RedirectToAction("BooksCollection");
         }
-        public ActionResult DeleteLib(int id)
+        public ActionResult DeleteLib(int id = 0)
         {
             if (Session["CurUsr"] == null)
             {
                 Response.Redirect("~/Library/SignIn");
+            }
+            if (id == 0)
+            {
+                Response.Redirect("~/Library/LibsCollection");
             }
             else if (((Librarian)Session["CurUsr"]).Privilege == 0)
             {
                 Response.Redirect("~/Library/ReadersCollection");
             }
-            DM.Lib.Delete(id);
+            try
+            {
+                DM.Lib.Delete(id);
+            }
+            catch { }
             return RedirectToAction("LibsCollection");
         }
+        #endregion
         #region SignIn
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SignIn(int Staff_Number = 0, string Password = "")

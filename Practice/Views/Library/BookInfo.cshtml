@@ -1,0 +1,140 @@
+﻿@model Practice.Models.Publication
+
+@{
+    ViewBag.Title = "BookInfo";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+
+    dl {
+        margin-bottom: 50px;
+    }
+
+        dl dt {
+            background: #f4ffef;
+            color: #000000;
+            float: left;
+            font-weight: bold;
+            margin-right: 10px;
+            padding: 5px;
+            width: 100px;
+        }
+
+        dl dd {
+            margin: 2px 0;
+            padding: 5px 0;
+        }
+</style>
+<body>
+    <div class="Mainpart" style="width:500px">
+        <div>
+            <h2 align="center"><b>Информация о книге</b></h2>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayName("Название книги: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("ББК: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.BBK)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("УДК: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UDK)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Автор: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Author)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Наличие")
+                </dt>
+                @if (Model.Available)
+                {
+                    <dd>
+                        @Html.DisplayName("Есть в наличии")
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        @Html.DisplayName("Нет в наличии")
+                    </dd>
+                }
+                <dt>
+                    @Html.DisplayName("ISBN: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ISBN)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Количество страниц")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Page_Count)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Номер выпуска: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Release_Number)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Год издания: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Название издательства: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publisher.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Город издательства: ")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Publisher.City)
+                </dd>
+            </dl>
+            <a href="/Library/BooksCollection"><input type="button" class="button" value="Назад" style="margin-left:20px; margin-top:10px" /></a>
+        </div>
+    </div>
+</body>

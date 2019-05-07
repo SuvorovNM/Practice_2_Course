@@ -19,8 +19,11 @@ namespace Practice.Models
         public void PenaltyToZero(int id)
         {
             Penalty pn = cont.PenaltySet.Find(id);
-            pn.Sum = 0;
-            cont.SaveChanges();
+            if (pn != null)
+            {
+                pn.Sum = 0;
+                cont.SaveChanges();
+            }
         }
     }
 }

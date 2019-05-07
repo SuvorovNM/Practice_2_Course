@@ -54,27 +54,33 @@ namespace Practice.Models
         public void Delete(int id)
         {
             Publication p = GetPublication(id);
-            try
+            if (p != null)
             {
-                cont.PublicationSet.Remove(p);
-                cont.SaveChanges();
+                try
+                {
+                    cont.PublicationSet.Remove(p);
+                    cont.SaveChanges();
+                }
+                catch { }
             }
-            catch { }
         }
         public void Edit(int id, Publication p)
         {
             Publication book = GetPublication(id);
-            book.Name = p.Name;
-            book.UDK = p.UDK;
-            book.BBK = p.BBK;
-            book.Author = p.Author;
-            book.ISBN = p.ISBN;
-            book.Page_Count = p.Page_Count;
-            book.Release_Number = p.Release_Number;
-            book.Year = p.Year;
-            book.Available = p.Available;
-            book.Publisher = p.Publisher;
-            cont.SaveChanges();
+            if (book != null)
+            {
+                book.Name = p.Name;
+                book.UDK = p.UDK;
+                book.BBK = p.BBK;
+                book.Author = p.Author;
+                book.ISBN = p.ISBN;
+                book.Page_Count = p.Page_Count;
+                book.Release_Number = p.Release_Number;
+                book.Year = p.Year;
+                book.Available = p.Available;
+                book.Publisher = p.Publisher;
+                cont.SaveChanges();
+            }
         }
     }
 }

@@ -18,8 +18,11 @@ namespace Practice.Models
         }
         public void Add(Publisher p)
         {
-            cont.PublisherSet.Add(p);
-            cont.SaveChanges();
+            if (p != null)
+            {
+                cont.PublisherSet.Add(p);
+                cont.SaveChanges();
+            }
         }
         public Publisher GetPublisher(int id)
         {
@@ -28,9 +31,12 @@ namespace Practice.Models
         public void Edit(int id, Publisher p)
         {
             Publisher t = GetPublisher(id);
-            t.Name = p.Name;
-            t.City = p.City;
-            cont.SaveChanges();
+            if (t != null)
+            {
+                t.Name = p.Name;
+                t.City = p.City;
+                cont.SaveChanges();
+            }
         }
     }
 }

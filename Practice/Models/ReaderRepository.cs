@@ -43,16 +43,19 @@ namespace Practice.Models
         public void Edit(int id, Reader t)
         {
             Reader rd = GetReader(id);
-            rd.FIO = t.FIO;
-            //rd.Birthday = t.Birthday;
-            rd.Phone_Number = t.Phone_Number;
-            rd.Email = t.Email;
-            rd.Address.Region = t.Address.Region;
-            rd.Address.City = t.Address.City;
-            rd.Address.Street = t.Address.Street;
-            rd.Address.House = t.Address.House;
-            rd.Address.Flat = t.Address.Flat;
-            cont.SaveChanges();
+            if (rd != null)
+            {
+                rd.FIO = t.FIO;
+                //rd.Birthday = t.Birthday;
+                rd.Phone_Number = t.Phone_Number;
+                rd.Email = t.Email;
+                rd.Address.Region = t.Address.Region;
+                rd.Address.City = t.Address.City;
+                rd.Address.Street = t.Address.Street;
+                rd.Address.House = t.Address.House;
+                rd.Address.Flat = t.Address.Flat;
+                cont.SaveChanges();
+            }
         }
         public void Add(Reader r)
         {
@@ -66,17 +69,20 @@ namespace Practice.Models
         public void DeleteReader(int id)
         {
             Reader t = GetReader(id);
-            try
+            if (t != null)
             {
-                cont.PersonSet.Remove(t);
-                cont.SaveChanges();
+                try
+                {
+                    cont.PersonSet.Remove(t);
+                    cont.SaveChanges();
+                }
+                catch { }
             }
-            catch { }
         }
         public decimal GetPenalty(Reader r)
         {
             IEnumerable<decimal> dc = (from t in cont.BookReturningSet where t.BookGiving.Reader.Id == r.Id && t.Penalty != null && t.Penalty.Sum > 0 select t.Penalty.Sum);
-            if (dc != null)
+            if (dc != null &&dc.Count()!=0)
                 return dc.Sum();
             else return 0;
         }

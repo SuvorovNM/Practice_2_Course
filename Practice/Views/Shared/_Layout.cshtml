@@ -48,6 +48,12 @@
                     {
                         <li>@Html.ActionLink("Библиотекари", "LibsCollection", "Library")</li>
                     }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="fa fa-sticky-note-o"  aria-hidden="true" style="font-size:30px;  line-height:20px; vertical-align:top; color:darkgrey;"></span> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/Library/Debtors">Отчет №1</a></li>
+                            <li><a href="/Library/CountBooks">Отчет №2</a></li>
+                        </ul>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" style="font-size:20px; font-weight:bold;color: #f98012;">
                     <li><a href="/Library/LibInfo/@(((Librarian)Session["CurUsr"]).Id)"><b style="font-size:20px; color:lightsalmon;" onmouseover="ToWhite(this)" onmouseout="ToSalmon(this)">@(((Librarian)Session["CurUsr"]).FIO)</b></a></li>

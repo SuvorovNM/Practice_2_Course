@@ -82,6 +82,39 @@
                             @Html.DisplayFor(model => model.Registration_Date)
                         </dd>
                         <dt>
+                            @Html.DisplayName("Регион: ")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Address.Region)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Город: ")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Address.City)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Улица: ")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Address.Street)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Дом: ")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Address.House)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Квартира: ")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Address.Flat)
+                        </dd>
+                        <dt>
                             @Html.DisplayName("Задолженность: ")
                         </dt>
                         <dd>
