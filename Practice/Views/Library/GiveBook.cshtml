@@ -39,7 +39,11 @@
                         <div><input type="number" class="form-control" name="BookID" value="@ViewData["BookID"]"></div>
                         @if (Session["Book_OK"] != null && (bool)Session["Book_OK"])
                         {
-                            @Html.ValidationMessageFor(model => model.Publication.Id, "Книга есть в наличии!", new { @class = "text-danger", @style="color:green"})
+                            @Html.ValidationMessageFor(model => model.Publication.Id, "Книга есть в наличии!", new { @class = "text-danger", @style = "color:green" })
+                        }
+                        else if (Session["Book_OK"] != null)
+                        {
+                            @Html.ValidationMessageFor(model => model.Publication.Id, "Книги нет в наличии!", new { @class = "text-danger" })
                         }
                         else
                         {
@@ -80,7 +84,14 @@
                 </div>
 
                 <div class="form-group">
-                    <a href=@("/Library/ReaderInfo/"+Model.Reader.Id)><input type="button" class="button" value="Назад" style="margin-left:20px" /></a><input type="submit" class="button" value="Выдать книгу" style="float:right; margin-right:20px" />
+                    @if (Session["Book_OK"] != null && (bool)Session["Book_OK"])
+                    {
+                        <a href=@("/Library/ReaderInfo/" + Model.Reader.Id)><input type="button" class="button" value="Назад" style="margin-left:20px" /></a><input type="submit" class="button" value="Выдать книгу" style="float:right; margin-right:20px" />
+                    }
+                    else
+                    {
+                        <a href=@("/Library/ReaderInfo/" + Model.Reader.Id)><input type="button" class="button" value="Назад" style="margin-left:20px;" /></a><input type="submit" class="button" value="Выдать книгу" disabled style="float:right; margin-right:20px; background-color:lightgray" />
+                    }
                 </div>
             </div>
         </div>

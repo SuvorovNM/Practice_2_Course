@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Practice.Models.BooksPopularity>
+@using Practice.Models
+@{
+    ViewBag.Title = "Debtors";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Популярность книг: </b></h2>
+        <a href="/Library/BooksPop_Download">
+            <input type="button" value="Скачать" class="button" style="float:right; margin-right:20px; margin-bottom:10px" />
+        </a>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Название")
+                </th>
+                <th>
+                    @Html.DisplayName("Автор")
+                </th>
+                <th>
+                    @Html.DisplayName("Издатель")
+                </th>
+                <th>
+                    @Html.DisplayName("Год")
+                </th>
+                <th>
+                    @Html.DisplayName("Кол-во выдач")
+                </th>
+            </tr>
+
+            @foreach (BooksPopularity item in (IEnumerable<BooksPopularity>)ViewData.Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher_Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</body>

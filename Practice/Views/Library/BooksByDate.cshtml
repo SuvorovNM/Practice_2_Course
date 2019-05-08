@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Practice.Models.BooksByDate>
+@using Practice.Models
+@{
+    ViewBag.Title = "CountBooks";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Список выданных книг: </b></h2>
+        <hr />
+        <form method="post" action="">
+            Дата выдачи:
+            <input type="date" name="date" required value="@((string)Session["ChosenDate_string"])" class="form-control" placeholder="Минимальное значение" />
+            <input type="submit" class="button" value="Поиск" style="margin-bottom:10px; margin-top:10px" />
+        </form>
+        <a href="/Library/BooksByDate_Download">
+            <input type="button" value="Скачать" class="button" style="float:right; margin-right:20px; margin-bottom:10px" />
+        </a>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Билет читателя")
+                </th>
+                <th>
+                    @Html.DisplayName("ФИО читателя")
+                </th>
+                <th>
+                    @Html.DisplayName("Код книги")
+                </th>
+                <th>
+                    @Html.DisplayName("Название книги")
+                </th>
+                <th>
+                    @Html.DisplayName("Автор")
+                </th>
+                <th>
+                    @Html.DisplayName("ФИО библиотекаря")
+                </th>
+                <th>
+                    @Html.DisplayName("Выдано до")
+                </th>
+            </tr>
+            @foreach (BooksByDate item in (IEnumerable<BooksByDate>)ViewData.Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LibTicket)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reader_FIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book_ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book_Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book_Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LibFIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpRetDate)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</body>

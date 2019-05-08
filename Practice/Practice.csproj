@@ -172,6 +172,8 @@
     <Compile Include="Models\BookReturning.cs">
       <DependentUpon>Library.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BooksByDate.cs" />
+    <Compile Include="Models\BooksPopularity.cs" />
     <Compile Include="Models\BRRepository.cs" />
     <Compile Include="Models\DataManager.cs" />
     <Compile Include="Models\ExcelExecuter.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Models\Penalty.cs">
       <DependentUpon>Library.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PenaltyDebtors.cs" />
     <Compile Include="Models\PenaltyRepository.cs" />
     <Compile Include="Models\Person.cs">
       <DependentUpon>Library.tt</DependentUpon>
@@ -341,6 +344,9 @@
     <Content Include="Views\Library\BookInfo.cshtml" />
     <Content Include="Views\Library\CountBooks.cshtml" />
     <Content Include="Views\Library\Debtors.cshtml" />
+    <Content Include="Views\Library\BooksPopularity.cshtml" />
+    <Content Include="Views\Library\PenaltyDebtors.cshtml" />
+    <Content Include="Views\Library\BooksByDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

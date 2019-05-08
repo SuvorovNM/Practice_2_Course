@@ -185,7 +185,7 @@
                                 </td>
                                 <td></td>
                             </tr>
-                            <tr><td><p><input type="date" name="Give_Date" class="form-control" value="1970-01-01"/></p></td></tr>
+                            <tr><td><p><input type="date" name="Give_Date" class="form-control" value="1970-01-01" /></p></td></tr>
                             <tr>
                                 <td>
                                     <div class="_bottom">
@@ -195,9 +195,9 @@
 
                                 <td></td>
                             </tr>
-                            <tr><td><p><input type="date" name="Exp_Return" class="form-control" value="1970-01-01"/></p></td></tr>
+                            <tr><td><p><input type="date" name="Exp_Return" class="form-control" value="1970-01-01" /></p></td></tr>
                             <tr>
-                                <td><input type="submit" class="button" value="Поиск" style="margin-bottom:10px"/></td>
+                                <td><input type="submit" class="button" value="Поиск" style="margin-bottom:10px" /></td>
                             </tr>
                         </table>
                     </form>
@@ -254,9 +254,20 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BookReturning.Real_Return_Date)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BookReturning.Penalty.Sum)
-                                    </td>
+                                    if (item.BookReturning.Penalty.Sum == 0)
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BookReturning.Penalty.Sum)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <b>
+                                                @Html.DisplayFor(modelItem => item.BookReturning.Penalty.Sum)
+                                            </b>
+                                        </td>
+                                    }
                                 }
                                 else
                                 {
@@ -276,23 +287,23 @@
                                         @Html.DisplayName("")
                                     </td>
                                 }
-                                    <td>
-                                        @if (item.BookReturning == null)
-                                        {
-                                            <nobr>
-                                                <a style="text-decoration:none;" href=@("/Library/BookReturn/"+item.Id)><i class="fa fa-check " aria-hidden="true"></i> Принять книгу</a>
-                                            </nobr>
-                                            <br />
-                                        }
+                                <td>
+                                    @if (item.BookReturning == null)
+                                    {
                                         <nobr>
-                                            <a style="text-decoration:none;" href=@("/Library/BGInfo/"+item.Id)><i class="fa fa-search " aria-hidden="true"></i> Подробнее</a>
+                                            <a style="text-decoration:none;" href=@("/Library/BookReturn/"+item.Id)><i class="fa fa-check " aria-hidden="true"></i> Принять книгу</a>
                                         </nobr>
-                                        @if (item.BookReturning != null && item.BookReturning.Penalty != null && item.BookReturning.Penalty.Sum > 0)
-                                        {
-                                            <br />
-                                            <a style="text-decoration:none;" href=@("/Library/PayPenalty/"+item.Id)><i class="fa fa-money " aria-hidden="true" typeof="submit"></i> Погасить</a>
-                                        }
-                                    </td>
+                                        <br />
+                                    }
+                                    <nobr>
+                                        <a style="text-decoration:none;" href=@("/Library/BGInfo/"+item.Id)><i class="fa fa-search " aria-hidden="true"></i> Подробнее</a>
+                                    </nobr>
+                                    @if (item.BookReturning != null && item.BookReturning.Penalty != null && item.BookReturning.Penalty.Sum > 0)
+                                    {
+                                        <br />
+                                        <a style="text-decoration:none;" href=@("/Library/PayPenalty/"+item.Id)><i class="fa fa-money " aria-hidden="true" typeof="submit"></i> Погасить</a>
+                                    }
+                                </td>
                             </tr>
                         }
                     </table>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Practice.Models.PenaltyDebtors>
+@using Practice.Models
+@{
+    ViewBag.Title = "Debtors";
+}
+
+<link href="~/Content/themes/MyStyles.css" rel="stylesheet" />
+<style>
+    body {
+        background: #ffffec;
+        background-image: url(../../Content/themes/base/images/Библиотека.jpg);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+    }
+</style>
+
+<body>
+    <div class="Mainpart">
+        <h2 align="center"><b>Должники: </b></h2>
+        <a href="/Library/PenaltyDebts_Download">
+            <input type="button" value="Скачать" class="button" style="float:right; margin-right:20px; margin-bottom:10px" />
+        </a>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("ФИО")
+                </th>
+                <th>
+                    @Html.DisplayName("Дата рождения")
+                </th>
+                <th>
+                    @Html.DisplayName("Телефон")
+                </th>
+                <th>
+                    @Html.DisplayName("Email")
+                </th>
+                <th>
+                    @Html.DisplayName("Сумма долга")
+                </th>
+            </tr>
+
+            @foreach (PenaltyDebtors item in (IEnumerable<PenaltyDebtors>)ViewData.Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bday)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sum)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</body>
+
