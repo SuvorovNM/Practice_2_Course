@@ -18,12 +18,16 @@ namespace Practice.Models
         }
         public IEnumerable<Publication> publicationsById(int Id)
         {
-            return (from t in cont.PublicationSet where t.Id == Id select t).OrderBy(book => book.Name);
+            return (from t in cont.PublicationSet
+                    where t.Id == Id
+                    select t).OrderBy(book => book.Name);
         }
         public IEnumerable<Publication> publicationsByName(string Name)
         {
-            return (from t in cont.PublicationSet where t.Name.Contains(Name) select t).OrderBy(book => book.Name);
-        }
+            return (from t in cont.PublicationSet
+                    where t.Name.Contains(Name)
+                    select t).OrderBy(book => book.Name);
+        }        
         public IEnumerable<Publication> publicationsByAuthor(string Name)
         {
             return (from t in cont.PublicationSet where t.Author.Contains(Name) select t).OrderBy(book => book.Name);
@@ -81,6 +85,10 @@ namespace Practice.Models
                 book.Publisher = p.Publisher;
                 cont.SaveChanges();
             }
+        }
+        public IEnumerable<Publication> BooksByPubl(int publisher_id)
+        {
+            return (from t in publications() where t.Publisher.Id == publisher_id select t).ToList();
         }
     }
 }

@@ -28,7 +28,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.FIO, "ФИО: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.FIO, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.FIO, new { htmlAttributes = new { @class = "form-control", @placeholder="Иванов Иван Иванович"} })
                         @Html.ValidationMessageFor(model => model.FIO, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Phone_Number, "Номер телефона: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Phone_Number, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Phone_Number, new { htmlAttributes = new { @class = "form-control", @placeholder = "+7(123)4567890" } })
                         @Html.ValidationMessageFor(model => model.Phone_Number, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Email, "Email: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "example@mail.ru" } })
                         @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Address.Region, "Регион: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Address.Region, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Address.Region, new { htmlAttributes = new { @class = "form-control", @placeholder = "Пермский край" } })
                         @Html.ValidationMessageFor(model => model.Address.Region, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Address.City, "Город: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Address.City, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Address.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "Пермь" } })
                         @Html.ValidationMessageFor(model => model.Address.City, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Address.Street, "Улица: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Address.Street, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Address.Street, new { htmlAttributes = new { @class = "form-control", @placeholder = "Мира" } })
                         @Html.ValidationMessageFor(model => model.Address.Street, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Address.House, "Дом: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Address.House, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Address.House, new { htmlAttributes = new { @class = "form-control", @placeholder = "11А" } })
                         @Html.ValidationMessageFor(model => model.Address.House, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Address.Flat, "Квартира: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Address.Flat, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Address.Flat, new { htmlAttributes = new { @class = "form-control", @placeholder = "6" } })
                         @Html.ValidationMessageFor(model => model.Address.Flat, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -110,7 +110,3 @@
         </div>
     </body>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

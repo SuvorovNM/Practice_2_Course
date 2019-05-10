@@ -1,5 +1,5 @@
 ﻿@model Practice.Models.Penalty
-
+@using Practice.Models;
 @{
     ViewBag.Title = "BookReturn";
 }
@@ -25,9 +25,37 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-group">
+                    @Html.LabelFor(model => model.Info, "Читатель: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" readonly value="@(((BookGiving)ViewData["BG"]).Reader.FIO)" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Info, "Книга: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" readonly value="@(((BookGiving)ViewData["BG"]).Publication.Author+" "+((BookGiving)ViewData["BG"]).Publication.Name)" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Info, "Дата выдачи: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" readonly value="@(((BookGiving)ViewData["BG"]).Give_Date.ToShortDateString())" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Info, "Выдано до: ", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <input type="text" readonly value="@(((BookGiving)ViewData["BG"]).Expected_Return_Date.ToShortDateString())" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
                     @Html.LabelFor(model => model.Info, "Информация о штрафе: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.Info, new { htmlAttributes = new { @class = "form-control", @style="margin-top:15px"} })
+                        @Html.EditorFor(model => model.Info, new { htmlAttributes = new { @class = "form-control", @style = "margin-top:15px" } })
                         @Html.ValidationMessageFor(model => model.Info, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -35,7 +63,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Sum, "Сумма штрафа: ", htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        Рубли: <input type="number" required name="SumP" min="0" value="0" class="form-control" style="width:100px"/>
+                        Рубли: <input type="number" required name="SumP" min="0" value="0" class="form-control" style="width:100px" />
                         Копейки: <input type="number" required name="SumK" min="0" max="99" value="0" class="form-control" style="width:100px" />
                         @Html.ValidationMessageFor(model => model.Sum, "", new { @class = "text-danger" })
                     </div>
@@ -43,7 +71,7 @@
 
                 <div class="form-group">
                     <a href=@("/Library/ReaderInfo/"+(int)Session["ReaderID"])><input type="button" class="button" value="Назад" style="margin-left:20px" /></a><input type="submit" class="button" value="Принять книгу" style="float:right; margin-right:20px" />
-</div>
+                </div>
             </div>
         </div>
     </body>

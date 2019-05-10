@@ -18,7 +18,9 @@ namespace Practice.Models
         }
         public IEnumerable<BookGiving> bookGivings(Reader rd)
         {
-            return (from t in cont.BookGivingSet where t.Reader.Id == rd.Id select t).OrderBy(bg => bg.Give_Date);
+            return (from t in cont.BookGivingSet
+                    where t.Reader.Id == rd.Id
+                    select t).OrderBy(bg => bg.Give_Date);
         }
         public void Add(BookGiving bg)
         {

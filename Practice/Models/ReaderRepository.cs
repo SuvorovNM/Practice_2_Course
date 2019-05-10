@@ -18,11 +18,15 @@ namespace Practice.Models
         }
         public IEnumerable<Reader> readersByFIO(string FIO)
         {
-            return (from t in cont.PersonSet where (t as Reader != null) && t.FIO==FIO select t as Reader).OrderBy(rd => rd.FIO);
+            return (from t in cont.PersonSet
+                    where (t as Reader != null) && t.FIO==FIO
+                    select t as Reader).OrderBy(rd => rd.FIO);
         }
         public IEnumerable<Reader> readersByLibCard(int LC)
         {
-            return (from t in cont.PersonSet where (t as Reader != null)&&(t as Reader).Library_Card==LC select t as Reader).OrderBy(rd => rd.FIO);
+            return (from t in cont.PersonSet
+                    where (t as Reader != null)&&(t as Reader).Library_Card==LC
+                    select t as Reader).OrderBy(rd => rd.FIO);
         }
         public IEnumerable<Reader> readersByBirthday(DateTime Birth)
         {
@@ -61,8 +65,10 @@ namespace Practice.Models
         {
             DateTime Today = DateTime.Today;
             r.Registration_Date = Today;
-            int MaxLibTicket = (from t in cont.PersonSet where (t as Reader != null) select (t as Reader).Library_Card).Max();
-            r.Library_Card = MaxLibTicket + 1;
+            int MaxLibTicket = 1;
+            if ((from t in cont.PersonSet where (t as Reader != null) select (t as Reader).Library_Card).Count()>0)
+                MaxLibTicket = (from t in cont.PersonSet where (t as Reader != null) select (t as Reader).Library_Card).Max()+1;
+            r.Library_Card = MaxLibTicket;
             cont.PersonSet.Add(r);
             cont.SaveChanges();
         }
@@ -81,7 +87,9 @@ namespace Practice.Models
         }
         public decimal GetPenalty(Reader r)
         {
-            IEnumerable<decimal> dc = (from t in cont.BookReturningSet where t.BookGiving.Reader.Id == r.Id && t.Penalty != null && t.Penalty.Sum > 0 select t.Penalty.Sum);
+            IEnumerable<decimal> dc = (from t in cont.BookReturningSet
+                                       where t.BookGiving.Reader.Id == r.Id && t.Penalty != null && t.Penalty.Sum > 0
+                                       select t.Penalty.Sum);
             if (dc != null &&dc.Count()!=0)
                 return dc.Sum();
             else return 0;

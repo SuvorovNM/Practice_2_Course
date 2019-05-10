@@ -32,7 +32,5 @@ namespace Practice.Models
         public virtual DbSet<Penalty> PenaltySet { get; set; }
         public virtual DbSet<BookGiving> BookGivingSet { get; set; }
         public virtual DbSet<BookReturning> BookReturningSet { get; set; }
-
-        public System.Data.Entity.DbSet<Practice.Models.Reader> People { get; set; }
     }
 }

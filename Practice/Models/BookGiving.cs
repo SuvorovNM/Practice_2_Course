@@ -16,7 +16,6 @@ namespace Practice.Models
 
     public partial class BookGiving
     {
-        //[Key,ForeignKey("BookReturning")]
         public int Id { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [Display(Name = "Дата выдачи")]

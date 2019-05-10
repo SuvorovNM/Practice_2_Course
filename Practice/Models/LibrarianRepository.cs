@@ -18,9 +18,13 @@ namespace Practice.Models
         }
         public Librarian LoginIn(int log, string pass)
         {
-            int ex = (from t in cont.PersonSet where (t as Librarian != null && (t as Librarian).Staff_Number == log && (t as Librarian).Password == pass) select t as Librarian).Count();
+            int ex = (from t in cont.PersonSet
+                      where (t as Librarian != null && (t as Librarian).Staff_Number == log && (t as Librarian).Password == pass)
+                      select t as Librarian).Count();
             if (ex > 0)
-                return (from t in cont.PersonSet where (t as Librarian != null && (t as Librarian).Staff_Number == log && (t as Librarian).Password == pass) select t as Librarian).First();
+                return (from t in cont.PersonSet
+                        where (t as Librarian != null && (t as Librarian).Staff_Number == log && (t as Librarian).Password == pass)
+                        select t as Librarian).First();
             else return null;
         }
         public Librarian GetLibrarian(int id)
@@ -49,7 +53,9 @@ namespace Practice.Models
         public void Add(Librarian lib)
         {
             lib.Hiring_Date = DateTime.Today;
-            int Staff_Number = (from t in cont.PersonSet where (t as Librarian != null) select (t as Librarian).Staff_Number).Max() + 1;
+            int Staff_Number = 1;
+            if ((from t in cont.PersonSet where (t as Librarian != null) select (t as Librarian).Staff_Number).Count()>0)
+                Staff_Number = (from t in cont.PersonSet where (t as Librarian != null) select (t as Librarian).Staff_Number).Max() + 1;
             lib.Staff_Number = Staff_Number;
             cont.PersonSet.Add(lib);
             cont.SaveChanges();

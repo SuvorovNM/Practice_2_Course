@@ -12,7 +12,6 @@ namespace Practice.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
     public partial class Address
     {
         public int Id { get; set; }
@@ -20,8 +19,9 @@ namespace Practice.Models
         public string City { get; set; }
         public string Street { get; set; }
         public string House { get; set; }
+        [Display(Name = "Номер квартиры")]
         public int Flat { get; set; }
-        
+    
         public virtual Person Person { get; set; }
     }
 }

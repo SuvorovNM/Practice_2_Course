@@ -18,7 +18,7 @@ namespace Practice.Models
         public int Id { get; set; }
         public string FIO { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        [Display(Name ="Дата рождения")]
+        [Display(Name = "Дата рождения")]
         public System.DateTime Birthday { get; set; }
         [Phone]
         [Display(Name = "Номер телефона")]

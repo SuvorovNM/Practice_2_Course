@@ -38,14 +38,13 @@
     @using (Html.BeginForm())
     {
 
-        @Html.AntiForgeryToken()
-    <p align="center" style="color:#ffffff; font-size:30px"><b>Авторизация в ИС "Библиотека"</b> </p>
-        <p align="center" style="font-size:20px">
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-        </p>
+        @Html.AntiForgeryToken()    
         <div class="Authorize-lib">
             <div class="form-horizontal">
-
+                <p align="center" style="font-size:30px"><b>Авторизация в ИС "Библиотека"</b> </p>
+                <p align="center" style="font-size:20px">
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </p>
                 <div class="form-group">
                     @Html.LabelFor(model => model.Staff_Number, "Штатный номер: ", htmlAttributes: new { @class = "control-label col-md-5 text-md-right" })
                     <div class="col-md-7">

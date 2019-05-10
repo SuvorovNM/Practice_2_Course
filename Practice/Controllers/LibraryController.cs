@@ -21,8 +21,13 @@ namespace Practice.Controllers
         {
             DM = _DM;
         }
+        #region Downloads
         public FileResult Debtors_Download()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             string file_path = Server.MapPath("~/Files/Debt.xlsx");
             string file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string file_name = "Список должников.xlsx";
@@ -30,6 +35,10 @@ namespace Practice.Controllers
         }
         public FileResult CountBooks_Download()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             string file_path = Server.MapPath("~/Files/CountBooks.xlsx");
             string file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string file_name = "Количество взятых книг.xlsx";
@@ -44,6 +53,10 @@ namespace Practice.Controllers
         }
         public FileResult PenaltyDebts_Download()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             string file_path = Server.MapPath("~/Files/PenaltyDebt.xlsx");
             string file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string file_name = "Должники.xlsx";
@@ -51,15 +64,27 @@ namespace Practice.Controllers
         }
         public FileResult BooksByDate_Download()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             string file_path = Server.MapPath("~/Files/BooksByDate.xlsx");
             string file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string file_name = ((string)Session["ChosenDate_string"])+"_Выдачи.xlsx";
             return File(file_path, file_type, file_name);
         }
+        #endregion
+        #region BooksByDate
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult BooksByDate()
         {
-            List<BooksByDate> BD = (from t in DM.BG.bookGivings() where t.Give_Date == DateTime.Today select new BooksByDate(t.Reader.Library_Card, t.Reader.FIO, t.Publication.Id, t.Publication.Name, t.Publication.Author, t.Librarian.FIO, t.Expected_Return_Date.ToShortDateString())).ToList();
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            List<BooksByDate> BD = (from t in DM.BG.bookGivings()
+                                    where t.Give_Date == DateTime.Today
+                                    select new BooksByDate(t.Reader.Library_Card, t.Reader.FIO, t.Publication.Id, t.Publication.Name, t.Publication.Author, t.Librarian.FIO, t.Expected_Return_Date.ToShortDateString())).ToList();
             ViewData.Model = BD;
             string path = Server.MapPath("~/Files/BooksByDate.xlsx");
             ExcelExecuter.XLOutput_BooksByDate(path, BD);
@@ -71,7 +96,15 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult BooksByDate(DateTime date)
         {
-            List<BooksByDate> BD = (from t in DM.BG.bookGivings() where t.Give_Date == date select new BooksByDate(t.Reader.Library_Card, t.Reader.FIO, t.Publication.Id, t.Publication.Name, t.Publication.Author, t.Librarian.FIO, t.Expected_Return_Date.ToShortDateString())).ToList();
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            List<BooksByDate> BD = (from t in DM.BG.bookGivings()
+                                    where t.Give_Date == date
+                                    select new BooksByDate(t.Reader.Library_Card, t.Reader.FIO, 
+                                    t.Publication.Id, t.Publication.Name, t.Publication.Author, 
+                                    t.Librarian.FIO, t.Expected_Return_Date.ToShortDateString())).ToList();
             ViewData.Model = BD;
             string path = Server.MapPath("~/Files/BooksByDate.xlsx");
             ExcelExecuter.XLOutput_BooksByDate(path, BD);
@@ -80,9 +113,20 @@ namespace Practice.Controllers
             Session["ChosenDate_string"] = str.Substring(0, str.IndexOf('T'));
             return View();
         }
+        #endregion
         public ActionResult PenaltyDebtors()
         {
-            List<PenaltyDebtors> PD = (from t in DM.Rd.readers() let sum = (from p in DM.Penalty.penalties() where p.BookReturning.BookGiving.Reader.Id == t.Id && p.Sum > 0 select p.Sum).Sum() where sum>0 orderby sum descending select new PenaltyDebtors(t.FIO, t.Birthday.ToShortDateString(), t.Phone_Number, t.Email, sum)).ToList();
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            List<PenaltyDebtors> PD = (from t in DM.Rd.readers()
+                                       let sum = (from p in DM.Penalty.penalties()
+                                                  where p.BookReturning.BookGiving.Reader.Id == t.Id && p.Sum > 0
+                                                  select p.Sum).Sum()
+                                       where sum>0
+                                       orderby sum descending
+                                       select new PenaltyDebtors(t.FIO, t.Birthday.ToShortDateString(), t.Phone_Number, t.Email, sum)).ToList();
             ViewData.Model = PD;
             string path = Server.MapPath("~/Files/PenaltyDebt.xlsx");
             ExcelExecuter.XLOutput_PenaltyDebts(path, PD);
@@ -90,7 +134,18 @@ namespace Practice.Controllers
         }
         public ActionResult Debtors()
         {
-            List<NamePlusCountBooks> NP = (from t in DM.Rd.readers() let countB= (from p in DM.BG.bookGivings() where (p.Reader.Id == t.Id && p.BookReturning == null && p.Expected_Return_Date < DateTime.Today) select p).Count() where countB > 0 select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, t.Registration_Date, countB)).ToList();
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            List<NamePlusCountBooks> NP = (from t in DM.Rd.readers()
+                                           let countB= (from p in DM.BG.bookGivings()
+                                                        where (p.Reader.Id == t.Id && p.BookReturning == null && 
+                                                        p.Expected_Return_Date < DateTime.Today)
+                                                        select p).Count()
+                                           where countB > 0
+                                           select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, 
+                                           t.Registration_Date, countB)).ToList();
             ViewData.Model = NP;
             ViewData["Debtors"] = ViewData.Model;
             string path = Server.MapPath("~/Files/Debt.xlsx");
@@ -99,18 +154,34 @@ namespace Practice.Controllers
         }
         public ActionResult BooksPopularity()
         {
-            List<BooksPopularity> BP = (from b in DM.Book.publications() let count = b.BookGiving.Count orderby count descending select new BooksPopularity(b.Name, b.Author, b.Publisher.Name, b.Year, count)).ToList();
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
+            List<BooksPopularity> BP = (from b in DM.Book.publications()
+                                        let count = b.BookGiving.Count
+                                        orderby count descending
+                                        select new BooksPopularity(b.Name, b.Author, b.Publisher.Name, b.Year, count)).ToList();
             ViewData.Model = BP;
             string path = Server.MapPath("~/Files/BooksPop.xlsx");
             ExcelExecuter.XLOutput_BooksPop(path, BP);
             return View();
         }
+        #region CountBooks
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult CountBooks()
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             ViewData["People"] = DM.Rd.readers().ToList();
             ViewData["Counts"] = (from t in DM.Rd.readers() select t.BookGiving.Count).ToList();
-            var values = (from t in DM.Rd.readers() select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, t.Registration_Date, t.BookGiving.Count)).OrderBy(p=>p.Count).Reverse().ToList();
+            var values = (from t in DM.Rd.readers()
+                          select new NamePlusCountBooks(t.FIO, t.Library_Card, t.Phone_Number, t.Email, t.Registration_Date, t.BookGiving.Count)).
+                          OrderBy(p=>p.Count).
+                          Reverse().
+                          ToList();
             ViewData["AllCounts"] = values;
             string path = Server.MapPath("~/Files/CountBooks.xlsx");
             ExcelExecuter.XLOutput_NamePlusCountBooks(path, values);
@@ -119,15 +190,24 @@ namespace Practice.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CountBooks(int min, int max)
         {
+            if (Session["CurUsr"] == null)
+            {
+                Response.Redirect("SignIn");
+            }
             ViewData["People"] = DM.Rd.readers().ToList();
             ViewData["Counts"] = (from t in DM.Rd.readers() select t.BookGiving.Count).ToList();
             
-            var values = (from t in DM.Rd.readers() where t.BookGiving.Count>=min && t.BookGiving.Count<=max select new NamePlusCountBooks( t.FIO,t.Library_Card,t.Phone_Number,t.Email,t.Registration_Date, t.BookGiving.Count)).ToList();
+            var values = (from t in DM.Rd.readers()
+                          where t.BookGiving.Count>=min && t.BookGiving.Count<=max
+                          select new NamePlusCountBooks( t.FIO,t.Library_Card,t.Phone_Number,t.
+                          Email,t.Registration_Date, t.BookGiving.Count))
+                          .OrderBy(p=>p.Count).Reverse().ToList();
             ViewData["AllCounts"] = values;
             string path = Server.MapPath("~/Files/CountBooks.xlsx");
             ExcelExecuter.XLOutput_NamePlusCountBooks(path, values);
             return View();
         }
+        #endregion
         #region ReadersCollection
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ReadersCollection()
@@ -195,6 +275,7 @@ namespace Practice.Controllers
             {
                 Response.Redirect("~/Library/SignIn");
             }
+            ViewData["BG"] = DM.BG.GetBookGiving(id);
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
